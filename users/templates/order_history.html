@@ -1,0 +1,6 @@
+<h2>Your Order History</h2>
+<ul>
+    {% for order in orders %}
+        <li>{{ order.service.name }} - {{ order.date }}</li>
+    {% endfor %}
+</ul>

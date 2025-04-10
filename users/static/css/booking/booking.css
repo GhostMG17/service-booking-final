@@ -1,0 +1,113 @@
+/* 🔹 Общие стили */
+body {
+    background-color: #f5f5f5;
+    font-family: 'Poppins', sans-serif;
+    color: #333;
+}
+
+/* 🔥 Заголовки */
+.section-title {
+    font-size: 22px;
+    font-weight: 600;
+    text-align: center;
+    color: #222;
+    padding-bottom: 10px;
+    border-bottom: 3px solid #007bff;
+    display: inline-block;
+}
+
+/* 🏆 Карточки барберов */
+#top-barbers {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 15px;
+    justify-content: center;
+}
+
+.barber-card {
+    background: #fff;
+    border-radius: 12px;
+    padding: 15px;
+    text-align: center;
+    width: 180px;
+    transition: 0.3s ease-in-out;
+    box-shadow: 0px 5px 15px rgba(0, 0, 0, 0.1);
+    cursor: pointer;
+}
+
+.barber-card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0px 8px 20px rgba(0, 0, 0, 0.15);
+}
+
+/* 📅 Карточка бронирования */
+.booking-card {
+    max-width: 450px;
+    margin: auto;
+    padding: 25px;
+    background: #fff;
+    border-radius: 15px;
+    box-shadow: 0px 5px 15px rgba(0, 0, 0, 0.1);
+}
+
+/* 🎨 Поля формы */
+.input-group {
+    margin-bottom: 15px;
+}
+
+.input-group label {
+    font-size: 14px;
+    font-weight: 500;
+    color: #444;
+    margin-bottom: 5px;
+    display: block;
+}
+
+.input-group select,
+.input-group input {
+    width: 100%;
+    padding: 10px;
+    border-radius: 8px;
+    border: 1px solid #ccc;
+    transition: 0.3s;
+}
+
+.input-group select:focus,
+.input-group input:focus {
+    border-color: #007bff;
+    outline: none;
+    box-shadow: 0px 0px 5px rgba(0, 123, 255, 0.5);
+}
+
+/* 🔘 Кнопка бронирования */
+.btn-booking {
+    width: 100%;
+    padding: 12px;
+    border: none;
+    border-radius: 8px;
+    background-color: #007bff;
+    color: white;
+    font-size: 16px;
+    font-weight: 600;
+    transition: 0.3s;
+    cursor: pointer;
+}
+
+.btn-booking:hover {
+    background-color: #0056b3;
+}
+
+
+.card {
+    border-radius: 12px;
+    transition: transform 0.2s ease-in-out;
+}
+
+.card:hover {
+    transform: scale(1.03);
+}
+
+.spinner-border {
+    margin-left: 10px;
+    vertical-align: middle;
+}

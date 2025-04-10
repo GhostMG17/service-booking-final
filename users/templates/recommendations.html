@@ -1,0 +1,6 @@
+<h2>Recommended for You</h2>
+<ul>
+    {% for service in recommendations %}
+        <li>{{ service.name }} - {{ service.price }}</li>
+    {% endfor %}
+</ul>

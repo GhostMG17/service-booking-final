@@ -1,0 +1,85 @@
+/* Общие стили для страницы */
+body {
+    font-family: Arial, sans-serif;
+    background-color: #f4f7fc;
+    padding: 20px;
+}
+
+/* Контейнер профиля */
+.profile-container {
+    width: 80%;
+    margin: 0 auto;
+    background-color: #fff;
+    padding: 20px;
+    border-radius: 10px;
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+}
+
+/* Стиль для карточек */
+.card {
+    background-color: #f9f9f9;
+    padding: 15px;
+    margin-bottom: 20px;
+    border-radius: 8px;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+}
+
+/* Заголовок */
+.card h2, .card h3 {
+    font-size: 1.8em;
+    color: #333;
+}
+
+/* Стили для каждого абзаца */
+.card p {
+    font-size: 1.1em;
+    color: #555;
+    margin: 5px 0;
+}
+
+/* История бронирований */
+.booking-history ul {
+    list-style-type: none;
+    padding: 0;
+}
+
+.booking-history li {
+    background-color: #fff;
+    padding: 10px;
+    margin-bottom: 10px;
+    border-radius: 5px;
+    box-shadow: 0 1px 4px rgba(0, 0, 0, 0.1);
+}
+
+.booking-history li strong {
+    color: #333;
+}
+
+/* Ссылка на редактирование профиля */
+.update-profile-link {
+    text-align: center;
+    margin-top: 20px;
+}
+
+.update-profile-link a {
+    text-decoration: none;
+    font-size: 1.2em;
+    color: #007bff;
+    font-weight: bold;
+}
+
+.update-profile-link a:hover {
+    color: #0056b3;
+}
+
+.alert {
+    background-color: #4CAF50; /* Зеленый для успешных сообщений */
+    color: white;
+    padding: 10px;
+    border-radius: 5px;
+    margin-bottom: 15px;
+}
+
+.alert p {
+    margin: 0;
+}

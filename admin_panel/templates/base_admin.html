@@ -1,0 +1,9 @@
+{% extends "base.html" %}
+{% block content %}
+<nav>
+    <ul>
+        <li><a href="{% url 'manage_users' %}">👤 Users </a></li>
+        <li><a href="{% url 'manage_bookings' %}">📅 Bookings </a></li>
+    </ul>
+</nav>
+{% endblock %}

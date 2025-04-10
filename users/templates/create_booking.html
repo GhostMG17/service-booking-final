@@ -1,0 +1,104 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Booking</title>
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <meta name="csrf-token" content="{{ csrf_token }}">
+</head>
+<body>
+
+    <h2>Select Service, Date, and Time</h2>
+    <div id="message"></div>
+
+    <form id="booking-form">
+        <label for="service">Select Service:</label>
+        <select id="service" name="service_id">
+            <option value="">Loading services...</option>
+        </select>
+
+        <label for="date">Select Date:</label>
+        <input type="date" id="date" name="date">
+
+        <label for="time">Select Time:</label>
+        <select id="time" name="time">
+            <option value="">Select a date first</option>
+        </select>
+
+        <button type="submit">Book Now</button>
+    </form>
+
+    <script>
+        $(document).ready(function () {
+            // Set up CSRF for Ajax requests
+            $.ajaxSetup({
+                beforeSend: function (xhr, settings) {
+                    let csrftoken = $("meta[name='csrf-token']").attr("content");
+                    xhr.setRequestHeader("X-CSRFToken", csrftoken);
+                }
+            });
+
+            // Load services list
+            $.get("/api/services/", function (data) {
+                $("#service").empty();
+                data.forEach(service => {
+                    $("#service").append(`<option value="${service.id}">${service.name}</option>`);
+                });
+            }).fail(function () {
+                $("#service").html('<option value="">Error loading services</option>');
+            });
+
+            // Load available slots when date or service is selected
+            $("#service, #date").change(function () {
+                let serviceId = $("#service").val();
+                let date = $("#date").val();
+
+                if (serviceId && date) {
+                    $.get(`/api/available-slots/?service_id=${serviceId}&date=${date}`, function (data) {
+                        $("#time").empty();
+                        if (data.available_slots.length > 0) {
+                            data.available_slots.forEach(slot => {
+                                $("#time").append(`<option value="${slot}">${slot}</option>`);
+                            });
+                        } else {
+                            $("#time").html('<option value="">No available slots</option>');
+                        }
+                    }).fail(function () {
+                        $("#time").html('<option value="">Error loading slots</option>');
+                    });
+                }
+            });
+
+            // Handle booking form submission
+            $("#booking-form").submit(function (e) {
+                e.preventDefault();
+
+                let serviceId = $("#service").val();
+                let date = $("#date").val();
+                let time = $("#time").val();
+
+                if (!serviceId || !date || !time) {
+                    $("#message").html("<p style='color: red;'>Please fill in all fields!</p>");
+                    return;
+                }
+
+                $.ajax({
+                    url: "/api/create_booking/",
+                    method: "POST",
+                    contentType: "application/json",
+                    data: JSON.stringify({ service_id: serviceId, date: date, time: time }),
+                    success: function (response) {
+                        $("#message").html("<p style='color: green;'>Booking successful!</p>");
+                    },
+                    error: function (xhr) {
+                        let errorMessage = xhr.responseJSON?.error || "Booking error!";
+                        $("#message").html(`<p style='color: red;'>${errorMessage}</p>`);
+                    }
+                });
+            });
+        });
+    </script>
+
+</body>
+</html>

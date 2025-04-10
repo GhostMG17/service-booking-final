@@ -1,0 +1,6 @@
+{% block content %}
+    <p>Hello, {{ user.username }}!</p>
+    <p>Thank you for registering on our website. To complete the registration process, please follow the link below to activate your account:</p>
+    <p><a href="{{ activation_url }}">Activate Account</a></p>
+    <p>If you did not register, simply ignore this email.</p>
+{% endblock %}

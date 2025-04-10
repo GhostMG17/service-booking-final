@@ -1,0 +1,77 @@
+{% load static %}
+
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Services</title>
+    <link rel="stylesheet" href="{% static 'css/styles.css' %}">
+</head>
+<body>
+    <div class="container">
+        <header class="header">
+            <h1>Our Services</h1>
+        </header>
+
+        <!-- Filter form -->
+        <form method="GET" action="{% url 'service_list' %}" class="filter-form">
+            <h2>Filter</h2>
+            <div class="form-group">
+                <label for="category">Category:</label>
+                <select name="category" id="category" class="form-control">
+                    <option value="">All categories</option>
+                    {% for value, name in form.category.field.choices %}
+                        <option value="{{ value }}" {% if value == form.category.value %}selected{% endif %}>{{ name }}</option>
+                    {% endfor %}
+                </select>
+            </div>
+
+            <div class="form-group">
+                <label for="price_min">Minimum price:</label>
+                <input type="number" name="price_min" id="price_min" value="{{ form.price_min.value }}" class="form-control">
+            </div>
+
+            <div class="form-group">
+                <label for="price_max">Maximum price:</label>
+                <input type="number" name="price_max" id="price_max" value="{{ form.price_max.value }}" class="form-control">
+            </div>
+
+            <div class="form-group">
+                <label for="duration_min">Minimum duration:</label>
+                <input type="number" name="duration_min" id="duration_min" value="{{ form.duration_min.value }}" class="form-control">
+            </div>
+
+            <div class="form-group">
+                <label for="duration_max">Maximum duration:</label>
+                <input type="number" name="duration_max" id="duration_max" value="{{ form.duration_max.value }}" class="form-control">
+            </div>
+
+            <div class="form-group">
+                <label for="sort_by">Sort by:</label>
+                <select name="sort_by" id="sort_by" class="form-control">
+                    {% for value, label in form.sort_by.field.choices %}
+                        <option value="{{ value }}" {% if value == form.sort_by.value %}selected{% endif %}>{{ label }}</option>
+                    {% endfor %}
+                </select>
+            </div>
+
+            <button type="submit" class="btn btn-primary">Apply filters</button>
+        </form>
+
+        <!-- Services list -->
+        <div class="services-list">
+            {% for service in services %}
+                <div class="service-card">
+                    <h2 class="service-title">{{ service.name }}</h2>
+                    <p class="service-price">Price: {{ service.price }}₽</p>
+                    <p class="service-duration">Duration: {{ service.duration }} min</p>
+                    <p class="service-category">Category: {{ service.get_category_display }}</p>
+                    <p class="service-description">{{ service.description }}</p>
+                </div>
+            {% empty %}
+                <p>No services available for the selected filters.</p>
+            {% endfor %}
+        </div>
+    </div>
+</body>
+</html>

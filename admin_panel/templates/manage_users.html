@@ -1,0 +1,54 @@
+{% extends "base.html" %}
+
+{% block title %}User Management{% endblock %}
+
+{% block content %}
+<h2>👤 User Management</h2>
+
+<!-- User filtering -->
+<form method="GET">
+    <input type="text" name="username" placeholder="Search by username" value="{{ request.GET.username }}">
+    <select name="role">
+        <option value="">All roles</option>
+        <option value="user" {% if request.GET.role == "user" %}selected{% endif %}>User</option>
+        <option value="owner" {% if request.GET.role == "owner" %}selected{% endif %}>Owner</option>
+    </select>
+    <button type="submit">Filter</button>
+</form>
+
+<table>
+    <thead>
+        <tr>
+            <th>ID</th>
+            <th>Username</th>
+            <th>Role</th>
+            <th>Actions</th>
+        </tr>
+    </thead>
+    <tbody>
+        {% for user in users %}
+        <tr>
+            <td>{{ user.id }}</td>
+            <td>
+            <a href="{% url 'user_detail' user.id %}">{{ user.username }}</a>
+            </td>
+
+            <td>
+                <form method="POST" action="{% url 'update_user_role' user.id %}">
+                    {% csrf_token %}
+                    <select name="role">
+                        <option value="user" {% if not user.is_owner %}selected{% endif %}>User</option>
+                        <option value="owner" {% if user.is_owner %}selected{% endif %}>Owner</option>
+                    </select>
+                    <button type="submit">Save</button>
+                </form>
+            </td>
+        </tr>
+        {% empty %}
+        <tr>
+            <td colspan="4">No users found</td>
+        </tr>
+        {% endfor %}
+    </tbody>
+</table>
+{% endblock %}

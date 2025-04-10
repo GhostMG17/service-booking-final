@@ -1,0 +1,63 @@
+{% extends "base.html" %}
+
+{% block title %}Booking Management{% endblock %}
+
+{% block content %}
+<h2>📅 Booking Management</h2>
+
+<!-- Filter by status -->
+<form method="GET">
+    <label for="status">Filter by status:</label>
+    <select name="status" id="status" onchange="this.form.submit()">
+        <option value="">All</option>
+        <option value="pending" {% if request.GET.status == "pending" %}selected{% endif %}>Pending</option>
+        <option value="confirmed" {% if request.GET.status == "confirmed" %}selected{% endif %}>Confirmed</option>
+        <option value="completed" {% if request.GET.status == "completed" %}selected{% endif %}>Completed</option>
+        <option value="canceled" {% if request.GET.status == "canceled" %}selected{% endif %}>Canceled</option>
+    </select>
+</form>
+
+<table>
+    <thead>
+        <tr>
+            <th>ID</th>
+            <th>Client</th>
+            <th>Date</th>
+            <th>Status</th>
+            <th>Actions</th>
+        </tr>
+    </thead>
+    <tbody>
+        {% for booking in bookings %}
+        <tr>
+            <td>{{ booking.id }}</td>
+            <td>{{ booking.user.username }}</td>
+            <td>{{ booking.booking_date }} at {{ booking.booking_time|time:"H:i" }}</td>
+            <td>
+                <span class="status {{ booking.status }}">{{ booking.get_status_display }}</span>
+            </td>
+            <td>
+            {% if booking.status != "completed" and booking.status != "canceled" %}
+                <form method="post" action="{% url 'update_booking_status' booking.id %}" class="status-form">
+                    {% csrf_token %}
+                    <button type="button" class="btn btn-confirmed">✅ Confirm</button>
+                    <button type="button" class="btn btn-completed">✔ Complete</button>
+                    <button type="button" class="btn btn-canceled">❌ Cancel</button>
+                    <input type="hidden" name="status">
+                </form>
+            {% elif booking.status == "canceled" %}
+                <span class="canceled-text">❌ Canceled</span>
+            {% else %}
+                <span class="completed-text">✅ Completed</span>
+            {% endif %}
+        </td>
+        </tr>
+        {% empty %}
+        <tr>
+            <td colspan="5">No bookings</td>
+        </tr>
+        {% endfor %}
+    </tbody>
+</table>
+
+{% endblock %}
