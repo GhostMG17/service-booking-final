@@ -6,7 +6,7 @@ This is a service booking system designed to allow users to book services online
 - Database integration.
 - User-friendly interface.
 
-This project is currently under development and will be finalized before the viva exam.
+_**This project is currently under development and will be finalized before the viva exam.**_
 
 ## Requirements
 
@@ -55,3 +55,5 @@ python manage.py migrate
 ```bash
 python manage.py runserver
 ```
+
+This will start the Django development server, and you can access the application at http://localhost:8000.
