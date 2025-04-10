@@ -6,7 +6,7 @@ This is a service booking system designed to allow users to book services online
 - Database integration.
 - User-friendly interface.
 
-_**This project is currently under development and will be finalized before the viva exam.**_
+_**This project will be finalized before the viva exam.**_
 
 ## Requirements
 
