@@ -17,3 +17,7 @@ This is a service booking system, designed to allow users to book services onlin
 1. Clone this repository:
    ```bash
    git clone https://github.com/GhostMG17/service-booking-pro.git
+
+2. Navigate into the project directory:
+
+cd service-booking-pro
