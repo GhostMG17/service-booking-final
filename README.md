@@ -34,7 +34,11 @@ git clone https://github.com/GhostMG17/service-booking-pro.git
 
 ## Navigate into the project directory:
 
+```bash
 cd service_booking
+
+```
+
 
 ## Install the required dependencies:
 Make sure you have pip installed, then run the following command to install the necessary libraries:
