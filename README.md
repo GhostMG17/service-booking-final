@@ -6,11 +6,14 @@ This is a service booking system designed to allow users to book services online
 - Database integration.
 - User-friendly interface.
 
+This project is currently under development and will be finalized before the viva exam.
+
 ## Requirements
 
 - Python 3.x
-- Flask (for backend)
+- Django
 - SQLite (or another database)
+- Other required dependencies in `requirements.txt`
 
 ## GitHub Repository
 
@@ -26,3 +29,26 @@ First, clone this repository to your local machine:
 
 ```bash
 git clone https://github.com/GhostMG17/service-booking-pro.git
+
+```
+
+## Navigate into the project directory:
+
+cd service_booking
+
+## Install the required dependencies:
+Make sure you have pip installed, then run the following command to install the necessary libraries:
+
+```bash
+pip install -r requirements.txt
+```
+## Set up the database:
+
+```bash
+python manage.py migrate
+```
+
+## Running the Development Server
+```bash
+python manage.py runserver
+```
