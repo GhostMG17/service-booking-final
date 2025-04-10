@@ -136,12 +136,16 @@ USE_TZ = True
 # Default primary key field type
 # https://docs.djangoproject.com/en/5.0/ref/settings/#default-auto-field
 
-DEFAULT_AUTO_FIELD = "django.db.models.BigAutoField"
+
+import os
+from dotenv import load_dotenv
+
+load_dotenv()  # Загружаем переменные окружения из .env
 
 EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
 EMAIL_HOST = 'smtp.gmail.com'
 EMAIL_PORT = 587
 EMAIL_USE_TLS = True
-EMAIL_HOST_USER = 'muhammadkhongaybulloev17@gmail.com'  # Ваш Gmail-адрес
-EMAIL_HOST_PASSWORD = 'dcas tnvx cgpv zgbd'  # Пароль приложения
-DEFAULT_FROM_EMAIL = 'muhammadkhongaybulloev17@gmail.com'  # Отправитель (можно установить свой)
+EMAIL_HOST_USER = os.getenv('EMAIL_HOST_USER')  # Получаем значение из .env
+EMAIL_HOST_PASSWORD = os.getenv('EMAIL_HOST_PASSWORD')  # Получаем пароль
+DEFAULT_FROM_EMAIL = os.getenv('EMAIL_HOST_USER')
