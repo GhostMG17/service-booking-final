@@ -5,7 +5,8 @@ from rest_framework.routers import DefaultRouter
 from django.conf.urls.static import static
 from . import views
 from django.contrib.auth import views as auth_views
-from .views import available_slots, get_services, get_masters, cancel_booking,booking_page, top_masters,login_user
+from .views import available_slots, get_services, get_masters, cancel_booking, booking_page, top_masters, login_user, \
+    cancel_booking_by_url
 from django.conf import settings
 
 
@@ -34,7 +35,9 @@ urlpatterns = [
     path('api/', include(router.urls)),
     path('api/available-slots/', available_slots, name='available_slots'),
     path('api/services/', get_services, name='get_services'),
-    path("api/cancel_booking/", cancel_booking, name="cancel_booking"),
+    # path("api/cancel_booking/", cancel_booking, name="cancel_booking"),
+    path("bookings/<int:booking_id>/cancel/", cancel_booking_by_url, name="cancel_booking_by_url"),
+
     path("api/masters/", get_masters, name="get_masters"),
     path('salon/<int:salon_id>/', views.salon_detail, name='salon_detail'),
     path('salons/', views.salons, name = 'salons'),

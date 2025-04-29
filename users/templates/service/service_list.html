@@ -21,71 +21,80 @@
 
 <div class="container">
     <!-- Filter Section -->
-    <div class="filter-card bg-white p-4 rounded border">
-    <h3 class="mb-3 text-center">Filter Services</h3>
-    <form method="GET" action="{% url 'service_list' %}">
-        <div class="row">
-            <!-- Service Category -->
-            <div class="col-md-4 mb-3">
-                <label for="category" class="form-label">Category</label>
-                <select name="category" id="category" class="form-control">
-                    <option value="">All Categories</option>
-                    {% for value, name in form.category.field.choices %}
-                        <option value="{{ value }}" {% if value == form.category.value %}selected{% endif %}>{{ name }}</option>
-                    {% endfor %}
-                </select>
-            </div>
+    <div class="filter-card shadow-lg">
+        <h2 class="mb-4"><i class="fas fa-spa me-2"></i>Find Your Perfect Treatment</h2>
+        <form method="GET" action="{% url 'service_list' %}">
+            <div class="row g-4">
+                <div class="col-md-3">
+                    <label for="category" class="form-label fw-bold">Service Category</label>
+                    <select name="category" id="category" class="form-select shadow-sm">
+                        <option value="">All Categories</option>
+                        {% for value, name in form.category.field.choices %}
+                            <option value="{{ value }}" {% if value == form.category.value %}selected{% endif %}>{{ name }}</option>
+                        {% endfor %}
+                    </select>
+                </div>
 
-            <!-- Price Range - simplified -->
-            <div class="col-md-4 mb-3">
-                <label class="form-label">Price Range</label>
-                <div class="d-flex align-items-center">
-                    <input type="number" name="price_min" id="price_min"
-                           class="form-control me-2" placeholder="Min"
-                           value="{{ form.price_min.value|default:'' }}">
-                    <span class="mx-1">-</span>
-                    <input type="number" name="price_max" id="price_max"
-                           class="form-control ms-2" placeholder="Max"
-                           value="{{ form.price_max.value|default:'' }}">
+                <div class="col-md-6">
+                    <label class="form-label fw-bold">Price Range</label>
+                    <div class="slider-container">
+                        <div class="slider-label">
+                            <span>Filter by price</span>
+                            <span class="slider-values" id="price-range-values">
+                                {% if form.price_min.value or form.price_max.value %}
+                                    {{ form.price_min.value|default:0 }} UZS - {{ form.price_max.value|default:"∞" }} UZS
+                                {% else %}
+                                    0 UZS - ∞ UZS
+                                {% endif %}
+                            </span>
+                        </div>
+                        <div id="price-slider" class="mb-3"></div>
+                        <input type="hidden" name="price_min" id="price_min" value="{{ form.price_min.value|default:'' }}">
+                        <input type="hidden" name="price_max" id="price_max" value="{{ form.price_max.value|default:'' }}">
+                    </div>
+                </div>
+
+                <div class="col-md-3">
+                    <label for="sort_by" class="form-label fw-bold">Sort By</label>
+                    <select name="sort_by" id="sort_by" class="form-select shadow-sm">
+                        {% for value, label in form.sort_by.field.choices %}
+                            <option value="{{ value }}" {% if value == form.sort_by.value %}selected{% endif %}>{{ label }}</option>
+                        {% endfor %}
+                    </select>
+                </div>
+
+                <div class="col-md-6">
+                    <label class="form-label fw-bold">Duration Range</label>
+                    <div class="slider-container">
+                        <div class="slider-label">
+                            <span>Filter by duration</span>
+                            <span class="slider-values" id="duration-range-values">
+                                {% if form.duration_min.value or form.duration_max.value %}
+                                    {{ form.duration_min.value|default:0 }} min - {{ form.duration_max.value|default:"∞" }} min
+                                {% else %}
+                                    0 min - ∞ min
+                                {% endif %}
+                            </span>
+                        </div>
+                        <div id="duration-slider" class="mb-3"></div>
+                        <input type="hidden" name="duration_min" id="duration_min" value="{{ form.duration_min.value|default:'' }}">
+                        <input type="hidden" name="duration_max" id="duration_max" value="{{ form.duration_max.value|default:'' }}">
+                    </div>
+                </div>
+
+                <div class="col-md-6 d-flex align-items-end">
+                    <div class="w-100 d-flex justify-content-end">
+                        <button type="submit" class="btn btn-primary px-4 py-2 me-3 shadow">
+                            <i class="fas fa-search me-2"></i> Find Services
+                        </button>
+                        <a href="{% url 'service_list' %}" class="btn btn-outline-secondary px-4 py-2 shadow-sm">
+                            <i class="fas fa-sync-alt me-2"></i> Reset
+                        </a>
+                    </div>
                 </div>
             </div>
-
-            <!-- Sort By -->
-            <div class="col-md-4 mb-3">
-                <label for="sort_by" class="form-label">Sort By</label>
-                <select name="sort_by" id="sort_by" class="form-control">
-                    {% for value, label in form.sort_by.field.choices %}
-                        <option value="{{ value }}" {% if value == form.sort_by.value %}selected{% endif %}>{{ label }}</option>
-                    {% endfor %}
-                </select>
-            </div>
-
-            <!-- Duration Range - simplified -->
-            <div class="col-md-4 mb-3">
-                <label class="form-label">Duration (min)</label>
-                <div class="d-flex align-items-center">
-                    <input type="number" name="duration_min" id="duration_min"
-                           class="form-control me-2" placeholder="Min"
-                           value="{{ form.duration_min.value|default:'' }}">
-                    <span class="mx-1">-</span>
-                    <input type="number" name="duration_max" id="duration_max"
-                           class="form-control ms-2" placeholder="Max"
-                           value="{{ form.duration_max.value|default:'' }}">
-                </div>
-            </div>
-
-            <!-- Buttons -->
-            <div class="col-md-8 d-flex align-items-end justify-content-end mb-3">
-                <button type="submit" class="btn btn-primary me-2">
-                    <i class="fas fa-search me-1"></i> Search
-                </button>
-                <a href="{% url 'service_list' %}" class="btn btn-light border">
-                    <i class="fas fa-undo me-1"></i> Reset
-                </a>
-            </div>
-        </div>
-    </form>
-</div>
+        </form>
+    </div>
 
     <!-- Services Grid -->
     {% if services %}

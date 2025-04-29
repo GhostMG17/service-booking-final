@@ -173,75 +173,83 @@
 
 <script>
     document.addEventListener('DOMContentLoaded', function() {
-        // Cancel Booking Button Handler
-        document.querySelectorAll('.cancel-booking').forEach(button => {
-            button.addEventListener('click', function() {
-                const bookingId = this.getAttribute('data-id');
+    // Cancel Booking Button Handler
+    document.querySelectorAll('.cancel-booking').forEach(button => {
+        button.addEventListener('click', function() {
+            const bookingId = this.getAttribute('data-id');
 
-                Swal.fire({
-                    title: 'Are you sure?',
-                    text: "You won't be able to revert this!",
-                    icon: 'warning',
-                    showCancelButton: true,
-                    confirmButtonColor: '#d63031',
-                    cancelButtonColor: '#636e72',
-                    confirmButtonText: 'Yes, cancel it!'
-                }).then((result) => {
-                    if (result.isConfirmed) {
-                        // AJAX request to cancel booking
-                        fetch(`/bookings/${bookingId}/cancel/`, {
-                            method: 'POST',
-                            headers: {
-                                'X-CSRFToken': '{{ csrf_token }}',
-                                'Content-Type': 'application/json'
-                            },
-                            body: JSON.stringify({})
-                        })
-                        .then(response => response.json())
-                        .then(data => {
-                            if (data.success) {
-                                Swal.fire(
-                                    'Cancelled!',
-                                    'Your booking has been cancelled.',
-                                    'success'
-                                ).then(() => {
-                                    // Remove or update the booking item
-                                    const bookingItem = document.getElementById(`booking-${bookingId}`);
-                                    if (bookingItem) {
-                                        bookingItem.querySelector('.booking-status .status-badge').className = 'status-badge status-cancelled';
-                                        bookingItem.querySelector('.booking-status .status-badge').textContent = 'Cancelled';
-                                        bookingItem.querySelector('.cancel-booking').remove();
+            Swal.fire({
+                title: 'Are you sure?',
+                text: "You won't be able to revert this!",
+                icon: 'warning',
+                showCancelButton: true,
+                confirmButtonColor: '#d63031',
+                cancelButtonColor: '#636e72',
+                confirmButtonText: 'Yes, cancel it!'
+            }).then((result) => {
+                if (result.isConfirmed) {
+                    // AJAX request to cancel booking
+                    fetch(`/bookings/${bookingId}/cancel/`, {
+                        method: 'DELETE',
+                        headers: {
+                            'X-CSRFToken': '{{ csrf_token }}',
+                            'Content-Type': 'application/json'
+                        },
+                        body: JSON.stringify({})
+                    })
+                    .then(response => response.json())
+                    .then(data => {
+                        console.log(data);  // Добавим консоль для проверки данных ответа
+
+                        if (data.success) {
+                            Swal.fire(
+                                'Cancelled!',
+                                'Your booking has been successfully deleted.',
+                                'success'
+                            ).then(() => {
+                                // Update booking item status and remove cancel button
+                                const bookingItem = document.getElementById(`booking-${bookingId}`);
+                                if (bookingItem) {
+                                    const statusBadge = bookingItem.querySelector('.booking-status .status-badge');
+                                    if (statusBadge) {
+                                        statusBadge.className = 'status-badge status-cancelled';
+                                        statusBadge.textContent = 'Cancelled';
                                     }
-                                });
-                            } else {
-                                Swal.fire(
-                                    'Error!',
-                                    data.message || 'Something went wrong.',
-                                    'error'
-                                );
-                            }
-                        })
-                        .catch(error => {
+                                    const cancelBtn = bookingItem.querySelector('.cancel-booking');
+                                    if (cancelBtn) cancelBtn.remove();
+                                }
+                            });
+                        } else {
                             Swal.fire(
                                 'Error!',
-                                'Failed to cancel booking. Please try again.',
+                                data.message || 'Something went wrong.',
                                 'error'
                             );
-                        });
-                    }
-                });
-            });
-        });
-
-        // View Booking Details Button Handler
-        document.querySelectorAll('.view-booking').forEach(button => {
-            button.addEventListener('click', function() {
-                const bookingId = this.getAttribute('data-id');
-                // Implement view booking details functionality
-                window.location.href = `/bookings/${bookingId}/`;
+                        }
+                    })
+                    .catch(error => {
+                        console.error("Error during cancel:", error);  // Логирование ошибок
+                        Swal.fire(
+                            'Error!',
+                            'Failed to cancel booking. Please try again.',
+                            'error'
+                        );
+                    });
+                }
             });
         });
     });
+
+    // View Booking Details Button Handler
+    document.querySelectorAll('.view-booking').forEach(button => {
+        button.addEventListener('click', function() {
+            const bookingId = this.getAttribute('data-id');
+            window.location.href = `/bookings/${bookingId}/`;
+        });
+    });
+});
+
+
 </script>
 
 {% endblock %}

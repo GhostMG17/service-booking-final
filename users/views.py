@@ -327,6 +327,39 @@ def cancel_booking(request):
     return JsonResponse({"success": False, "error": "Method not allowed"}, status=405)
 
 
+@csrf_exempt
+def cancel_booking_by_url(request, booking_id):
+    if request.method == "DELETE":
+        try:
+            booking = Booking.objects.get(id=booking_id)
+
+            now = datetime.now().date()
+            if booking.booking_date < now:
+                return JsonResponse({"success": False, "message": "Cannot cancel past booking."}, status=400)
+
+            user_email = booking.user.email
+            service_name = booking.service.name
+            booking_date = booking.booking_date.strftime("%d.%m.%Y")
+            booking_time = booking.booking_time.strftime("%H:%M")
+
+            booking.delete()
+
+            send_mail(
+                "Booking Canceled",
+                f"Your booking for {service_name} on {booking_date} at {booking_time} has been successfully canceled.",
+                "muhammadkhongaybulloev17@gmail.com",
+                [user_email],
+                fail_silently=False,
+            )
+
+            return JsonResponse({"success": True})
+        except Booking.DoesNotExist:
+            return JsonResponse({"success": False, "message": "Booking not found."}, status=404)
+        except Exception as e:
+            return JsonResponse({"success": False, "message": str(e)}, status=500)
+
+    return JsonResponse({"success": False, "message": "Method not allowed."}, status=405)
+
 """ BOOKING DETAIL VIEW FUNCTION """
 def booking_details(request, booking_id):
     try:
