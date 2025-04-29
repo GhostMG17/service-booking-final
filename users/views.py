@@ -283,51 +283,6 @@ Thank you for using our service!
 
 """ CANCEL BOOKING VIEW FUNCTION """
 @csrf_exempt
-def cancel_booking(request):
-    if request.method == "DELETE":
-        try:
-            data = json.loads(request.body)
-            booking_id = data.get("booking_id")
-
-            if not booking_id:
-                return JsonResponse({"success": False, "error": "Booking ID not provided!"}, status=400)
-
-            booking = Booking.objects.get(id=booking_id)
-
-            # Check if it can be canceled
-            now = datetime.now().date()
-            if booking.booking_date < now:
-                return JsonResponse({"success": False, "error": "Cannot cancel past booking!"}, status=400)
-
-            user_email = booking.user.email
-            service_name = booking.service.name
-            booking_date = booking.booking_date.strftime("%d.%m.%Y")
-            booking_time = booking.booking_time.strftime("%H:%M")
-
-            booking.delete()  # ❗ Delete the booking
-
-            # 🔔 Send email to user
-            send_mail(
-                "Booking Canceled",
-                f"Your booking for {service_name} on {booking_date} at {booking_time} has been successfully canceled.",
-                "muhammadkhongaybulloev17@gmail.com",  # Sender
-                [user_email],  # Recipient
-                fail_silently=False,
-            )
-
-            return JsonResponse({"success": True, "message": "Booking canceled, notification sent!"})
-
-        except Booking.DoesNotExist:
-            return JsonResponse({"success": False, "error": "Booking not found"}, status=404)
-        except json.JSONDecodeError:
-            return JsonResponse({"success": False, "error": "JSON format error!"}, status=400)
-        except Exception as e:
-            return JsonResponse({"success": False, "error": f"Error: {str(e)}"}, status=400)
-
-    return JsonResponse({"success": False, "error": "Method not allowed"}, status=405)
-
-
-@csrf_exempt
 def cancel_booking_by_url(request, booking_id):
     if request.method == "DELETE":
         try:
