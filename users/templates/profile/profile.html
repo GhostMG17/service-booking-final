@@ -1,0 +1,247 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block content %}
+<title>User Profile | Beauty Salon</title>
+<!-- Подключаем Font Awesome для иконок -->
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+<!-- Подключаем SweetAlert2 для красивых модальных окон -->
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/sweetalert2@11/dist/sweetalert2.min.css">
+<!-- Подключаем наш CSS -->
+<link rel="stylesheet" href="{% static 'css/profile/profile.css' %}">
+
+<div class="profile-container">
+    <!-- Profile Header -->
+    <div class="profile-header">
+        <div class="profile-avatar">
+            {{ user.username|first|upper }}
+        </div>
+        <div>
+            <h1 class="profile-title">{{ profile.full_name|default:user.username }}</h1>
+            <p class="profile-subtitle">Member since {{ user.date_joined|date:"F Y" }}</p>
+        </div>
+    </div>
+
+    <!-- Profile Grid -->
+    <div class="profile-grid">
+        <!-- Personal Info Section -->
+        <div>
+            <div class="profile-card">
+                <h2>Personal Information</h2>
+                <a href="{% url 'update_profile' %}" class="edit-profile-btn">
+                    <i class="fas fa-edit"></i> Edit
+                </a>
+
+                <div class="info-item">
+                    <span class="info-label">Username:</span>
+                    <span class="info-value">{{ user.username }}</span>
+                </div>
+
+                <div class="info-item">
+                    <span class="info-label">Full Name:</span>
+                    <span class="info-value">{{ profile.full_name|default:"Not specified" }}</span>
+                </div>
+
+                <div class="info-item">
+                    <span class="info-label">Email:</span>
+                    <span class="info-value">{{ user.email }}</span>
+                </div>
+
+
+
+                <div class="info-item">
+                    <span class="info-label">Phone:</span>
+                    <span class="info-value">{{ user.phone_number|default:"Not specified" }}</span>
+                </div>
+
+
+            </div>
+
+            <!-- Additional Cards can be added here -->
+        </div>
+
+        <!-- Booking History Section -->
+        <div class="profile-card">
+    <h2>Booking History</h2>
+
+    {% if bookings %}
+        <div id="booking-list">
+            {% for booking in bookings %}
+                <div class="booking-item" id="booking-{{ booking.id }}">
+                    <div class="booking-service">{{ booking.service.name }}</div>
+
+                    <div class="booking-meta">
+                        <div class="booking-date">
+                            <i class="far fa-calendar-alt"></i>
+                            {{ booking.booking_date|date:"d M Y" }}
+                        </div>
+                        <div class="booking-time">
+                            <i class="far fa-clock"></i>
+                            {{ booking.start_time|time:"H:i" }} - {{ booking.end_time|time:"H:i" }}
+                        </div>
+                        <div class="booking-status">
+                            <i class="fas fa-circle"></i>
+                            <span class="status-badge status-{{ booking.status|lower }}">
+                                {{ booking.status }}
+                            </span>
+                        </div>
+                    </div>
+
+                    <div class="booking-actions">
+                        {% if booking.status|lower == "active" or booking.status|lower == "pending" %}
+                            <button class="btn btn-danger cancel-booking" data-id="{{ booking.id }}">
+                                <i class="fas fa-times"></i> Cancel
+                            </button>
+                        {% endif %}
+
+                    </div>
+                </div>
+            {% endfor %}
+        </div>
+
+        <!-- Improved Pagination -->
+        {% if bookings.paginator.num_pages > 1 %}
+        <div class="pagination-wrapper">
+            <div class="pagination-info">
+                Showing {{ bookings.start_index }}-{{ bookings.end_index }} of {{ bookings.paginator.count }} bookings
+            </div>
+            <ul class="pagination">
+                {% if bookings.has_previous %}
+                    <li class="page-item">
+                        <a class="page-link" href="?page=1" title="First">
+                            <i class="fas fa-angle-double-left"></i>
+                        </a>
+                    </li>
+                    <li class="page-item">
+                        <a class="page-link" href="?page={{ bookings.previous_page_number }}" title="Previous">
+                            <i class="fas fa-chevron-left"></i>
+                        </a>
+                    </li>
+                {% endif %}
+
+                {% for i in page_range|default:bookings.paginator.get_elided_page_range %}
+                    {% if bookings.number == i %}
+                        <li class="page-item active">
+                            <span class="page-link">{{ i }}</span>
+                        </li>
+                    {% else %}
+                        {% if i == bookings.paginator.ELLIPSIS %}
+                            <li class="page-item disabled">
+                                <span class="page-link">{{ i }}</span>
+                            </li>
+                        {% else %}
+                            <li class="page-item">
+                                <a class="page-link" href="?page={{ i }}">{{ i }}</a>
+                            </li>
+                        {% endif %}
+                    {% endif %}
+                {% endfor %}
+
+                {% if bookings.has_next %}
+                    <li class="page-item">
+                        <a class="page-link" href="?page={{ bookings.next_page_number }}" title="Next">
+                            <i class="fas fa-chevron-right"></i>
+                        </a>
+                    </li>
+                    <li class="page-item">
+                        <a class="page-link" href="?page={{ bookings.paginator.num_pages }}" title="Last">
+                            <i class="fas fa-angle-double-right"></i>
+                        </a>
+                    </li>
+                {% endif %}
+            </ul>
+        </div>
+        {% endif %}
+    {% else %}
+        <div class="empty-state">
+            <i class="far fa-calendar-times"></i>
+            <h3>No bookings yet</h3>
+            <p>You haven't made any bookings with us yet.</p>
+            <a href="{% url 'service_list' %}" class="btn btn-primary">
+                <i class="fas fa-spa"></i> Book a Service
+            </a>
+        </div>
+    {% endif %}
+    </div>
+    </div>
+</div>
+
+<!-- JavaScript -->
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+<script src="{% static 'js/profile.js' %}"></script>
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        // Cancel Booking Button Handler
+        document.querySelectorAll('.cancel-booking').forEach(button => {
+            button.addEventListener('click', function() {
+                const bookingId = this.getAttribute('data-id');
+
+                Swal.fire({
+                    title: 'Are you sure?',
+                    text: "You won't be able to revert this!",
+                    icon: 'warning',
+                    showCancelButton: true,
+                    confirmButtonColor: '#d63031',
+                    cancelButtonColor: '#636e72',
+                    confirmButtonText: 'Yes, cancel it!'
+                }).then((result) => {
+                    if (result.isConfirmed) {
+                        // AJAX request to cancel booking
+                        fetch(`/bookings/${bookingId}/cancel/`, {
+                            method: 'POST',
+                            headers: {
+                                'X-CSRFToken': '{{ csrf_token }}',
+                                'Content-Type': 'application/json'
+                            },
+                            body: JSON.stringify({})
+                        })
+                        .then(response => response.json())
+                        .then(data => {
+                            if (data.success) {
+                                Swal.fire(
+                                    'Cancelled!',
+                                    'Your booking has been cancelled.',
+                                    'success'
+                                ).then(() => {
+                                    // Remove or update the booking item
+                                    const bookingItem = document.getElementById(`booking-${bookingId}`);
+                                    if (bookingItem) {
+                                        bookingItem.querySelector('.booking-status .status-badge').className = 'status-badge status-cancelled';
+                                        bookingItem.querySelector('.booking-status .status-badge').textContent = 'Cancelled';
+                                        bookingItem.querySelector('.cancel-booking').remove();
+                                    }
+                                });
+                            } else {
+                                Swal.fire(
+                                    'Error!',
+                                    data.message || 'Something went wrong.',
+                                    'error'
+                                );
+                            }
+                        })
+                        .catch(error => {
+                            Swal.fire(
+                                'Error!',
+                                'Failed to cancel booking. Please try again.',
+                                'error'
+                            );
+                        });
+                    }
+                });
+            });
+        });
+
+        // View Booking Details Button Handler
+        document.querySelectorAll('.view-booking').forEach(button => {
+            button.addEventListener('click', function() {
+                const bookingId = this.getAttribute('data-id');
+                // Implement view booking details functionality
+                window.location.href = `/bookings/${bookingId}/`;
+            });
+        });
+    });
+</script>
+
+{% endblock %}

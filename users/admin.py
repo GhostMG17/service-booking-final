@@ -3,13 +3,28 @@ from .models import CustomUser, Service, Order, Profile, Master, Salon, Review
 from django.contrib import admin
 from .models import Booking
 
+
+
 class CustomUserAdmin(UserAdmin):
-    list_display = ('username', 'email', 'is_staff', 'is_superuser', 'is_owner')  # Added is_owner
-    list_filter = ('is_staff', 'is_superuser', 'is_owner')  # Filter by is_owner
+    # Добавляем full_name в список отображаемых полей
+    list_display = ('username', 'email', 'full_name', 'is_staff', 'is_superuser', 'is_active', 'is_owner')
+
+    # Добавляем full_name в фильтры
+    list_filter = ('is_staff', 'is_superuser', 'is_active', 'is_owner')
+
+    # Добавляем full_name в форму редактирования
     fieldsets = UserAdmin.fieldsets + (
-        ('Additional Information', {'fields': ('is_owner',)}),  # Added in the edit form
+        ('Additional Information', {'fields': ('is_owner', 'full_name')}),  # Добавляем full_name в редактируемую форму
     )
 
+    # Добавляем full_name в список полей, которые можно редактировать
+    add_fieldsets = UserAdmin.add_fieldsets + (
+        (None, {
+            'fields': ('username', 'email', 'phone_number', 'full_name', 'password1', 'password2', 'role')
+        }),
+    )
+
+# Регистрируем CustomUserAdmin для модели CustomUser
 admin.site.register(CustomUser, CustomUserAdmin)
 
 
@@ -51,10 +66,18 @@ class SalonAdmin(admin.ModelAdmin):
 
 @admin.register(Master)
 class MasterAdmin(admin.ModelAdmin):
-    list_display = ("name", "role", "service", "salon")  # Added salon in the list display
-    list_filter = ("salon", "role")  # Filtering by salon
-    search_fields = ("name", "salon_name")  # Searching by name and salon name
+    list_display = ("name", "role", "service", "salon", "experience_display", "appointment_count")
+    list_filter = ("salon", "role")
+    search_fields = ("name", "salon__name")
 
+    def appointment_count(self, obj):
+        return obj.appointment_count()
+    appointment_count.short_description = "Appointments"
+
+    def experience_display(self, obj):
+        return obj.experience_display()  # Отображение опыта с форматом, который ты хочешь
+
+    experience_display.short_description = "Experience (years)"
 
 @admin.register(Review)
 class ReviewAdmin(admin.ModelAdmin):

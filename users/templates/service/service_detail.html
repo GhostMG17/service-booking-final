@@ -1,0 +1,177 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}{{ service.name }} | Bookify{% endblock %}
+
+{% block content %}
+
+<!-- Linking to the service detail page CSS file -->
+<link rel="stylesheet" href="{% static 'css/service/service_detail.css'%}">
+
+<div class="container my-5">
+  <div class="row">
+    <!-- Service Image Column -->
+    <div class="col-lg-6 mb-4">
+      <div class="service-image-container rounded-4 overflow-hidden shadow-lg">
+        {% if service.image %}
+          <!-- Display the service image if available -->
+          <img src="{{ service.image.url }}" alt="{{ service.name }}" class="img-fluid w-100">
+        {% else %}
+          <!-- Placeholder image if no service image is provided -->
+          <div class="service-placeholder bg-gradient-primary text-white d-flex align-items-center justify-content-center" style="height: 400px;">
+            <i class="fas fa-cut fa-5x"></i>
+          </div>
+        {% endif %}
+      </div>
+
+      <!-- Service Highlights -->
+      <div class="mt-4">
+        <!-- Duration -->
+        <div class="d-flex align-items-center mb-3">
+          <div class="icon-circle bg-primary text-white me-3">
+            <i class="fas fa-clock"></i>
+          </div>
+          <div>
+            <h5 class="mb-0">Duration</h5>
+            <p class="text-muted mb-0">{{ service.duration }} minutes</p>
+          </div>
+        </div>
+
+        <!-- Price -->
+        <div class="d-flex align-items-center mb-3">
+          <div class="icon-circle bg-primary text-white me-3">
+            <i class="fas fa-dollar-sign"></i>
+          </div>
+          <div>
+            <h5 class="mb-0">Price</h5>
+            <p class="text-muted mb-0">{{ service.price }} UZS </p>
+          </div>
+        </div>
+
+        <!-- Specialists Information -->
+        <div class="d-flex align-items-center">
+          <div class="icon-circle bg-primary text-white me-3">
+            <i class="fas fa-user-tie"></i>
+          </div>
+          <div>
+            <h5 class="mb-0">Specialists</h5>
+            <p class="text-muted mb-0">Professional certified masters</p>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Service Details Column -->
+    <div class="col-lg-6">
+      <div class="service-details-card p-4 p-lg-5 rounded-4 shadow-sm">
+        <div class="d-flex justify-content-between align-items-start mb-4">
+          <div>
+            <!-- Label for popular service -->
+            <span class="badge bg-primary-light text-primary mb-2">Popular</span>
+            <h1 class="display-5 fw-bold mb-3">{{ service.name }}</h1>
+          </div>
+          <div class="text-end">
+            <div class="price-display">
+              <!-- Display service price -->
+              <span class="price-currency"></span>
+              <span class="price-amount">{{ service.price }}</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- Service Description -->
+        <div class="service-description mb-5">
+          <h4 class="mb-3">About This Service</h4>
+          <p class="lead">{{ service.description }}</p>
+        </div>
+
+        <!-- Service Features -->
+        <div class="service-features mb-5">
+          <h4 class="mb-3">What's Included</h4>
+          <ul class="feature-list">
+            <li class="mb-2">
+              <i class="fas fa-check-circle text-success me-2"></i>
+              Professional consultation
+            </li>
+            <li class="mb-2">
+              <i class="fas fa-check-circle text-success me-2"></i>
+              High-quality products
+            </li>
+            <li class="mb-2">
+              <i class="fas fa-check-circle text-success me-2"></i>
+              Personalized approach
+            </li>
+            <li class="mb-2">
+              <i class="fas fa-check-circle text-success me-2"></i>
+              Comfortable environment
+            </li>
+          </ul>
+        </div>
+
+        <!-- Booking Buttons -->
+        <div class="d-grid gap-3 d-sm-flex">
+          <!-- Button to navigate to the booking page -->
+          <a href="{% url 'booking_page' %}?service_id={{ service.id }}" class="btn btn-primary btn-lg px-4 py-3">
+            <i class="fas fa-calendar-check me-2"></i> Book Now
+          </a>
+          <!-- Button to navigate back to other services -->
+          <a href="{% url 'service_list' %}" class="btn btn-outline-primary btn-lg px-4 py-3">
+            <i class="fas fa-arrow-left me-2"></i> Other Services
+          </a>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Masters Section -->
+  <div class="row mt-5">
+    <div class="col-12">
+      <h2 class="text-center mb-5">Our Specialists</h2>
+      <div class="row">
+        {% for master in service.master.all %}
+        <!-- Display each master in a card -->
+        <div class="col-md-4 mb-4">
+          <div class="card master-card h-100 border-0 shadow-sm">
+            <div class="card-body text-center p-4">
+              <div class="master-avatar mx-auto mb-3">
+                {% if master.image %}
+                  <!-- Display master image if available -->
+                  <img src="{{ master.image.url }}" alt="{{ master.name }}" class="img-fluid rounded-circle">
+                {% else %}
+                  <!-- Placeholder avatar if no image is available -->
+                  <div class="avatar-placeholder rounded-circle bg-primary text-white d-flex align-items-center justify-content-center">
+                    <i class="fas fa-user-tie fa-2x"></i>
+                  </div>
+                {% endif %}
+              </div>
+              <h4 class="mb-2">{{ master.name }}</h4>
+              <p class="text-muted mb-3">{{ master.specialization }}</p>
+              <!-- Rating Display for Master -->
+              <div class="rating mb-3">
+                <i class="fas fa-star text-warning"></i>
+                <i class="fas fa-star text-warning"></i>
+                <i class="fas fa-star text-warning"></i>
+                <i class="fas fa-star text-warning"></i>
+                <i class="fas fa-star-half-alt text-warning"></i>
+                <span class="ms-2">{{ master.avg_rating|default:"-"|floatformat:1 }}</span>
+              </div>
+            </div>
+          </div>
+        </div>
+        {% empty %}
+        <!-- Message shown when there are no specialists available -->
+        <div class="col-12 text-center py-5">
+          <i class="fas fa-user-tie fa-3x text-muted mb-3"></i>
+          <h4>No specialists available</h4>
+          <p class="text-muted">We'll assign the best master for your booking</p>
+        </div>
+        {% endfor %}
+      </div>
+    </div>
+  </div>
+</div>
+
+<style>
+
+</style>
+{% endblock %}

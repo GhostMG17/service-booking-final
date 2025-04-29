@@ -1,0 +1,122 @@
+{% load static %}
+
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Black Label Barbers</title>
+    <!-- Link to Google Fonts to include custom fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@600;700&family=Barlow:wght@400;500&display=swap" rel="stylesheet">
+    <!-- Link to the external CSS file -->
+    <link rel="stylesheet" href="{% static 'css/master/master.css'%}">
+    <!-- Link to the external JavaScript file -->
+    <script src="{% static 'js/master.js'%}"></script>
+</head>
+<body>
+    <!-- Link to return to the homepage -->
+    <a href="/" class="back-home">
+        <!-- SVG icon for the back arrow -->
+        <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <line x1="19" y1="12" x2="5" y2="12"></line>
+            <polyline points="12 19 5 12 12 5"></polyline>
+        </svg>
+        Back to Home
+    </a>
+
+    <!-- Hero section displaying the main title and subtitle -->
+    <section class="hero-section">
+        <div class="hero-content">
+            <h1 class="hero-title">Black Label Barbers</h1>
+            <div class="hero-divider"></div>
+            <p class="hero-subtitle">Precision cuts by master barbers</p>
+        </div>
+        <div class="scroll-down">
+            <span>Meet Our Barbers</span>
+            <!-- Downward arrow icon for scrolling -->
+            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <path d="M7 13l5 5 5-5M7 6l5 5 5-5"/>
+            </svg>
+        </div>
+    </section>
+
+    <!-- Barbers section showcasing master barbers -->
+    <section class="barbers-section">
+        <div class="section-header">
+            <h2 class="section-title">Our Master Barbers</h2>
+            <p class="section-subtitle">The sharpest in the business</p>
+        </div>
+
+        <div class="barbers-grid">
+            <!-- Loop to display each barber -->
+            {% for master in masters %}
+            <div class="barber-card">
+                <div class="barber-image-container">
+                    <!-- Check if the barber has an image and display it -->
+                    {% if master.image %}
+                    <img src="{{ master.image.url }}" alt="{{ master.name }}" class="barber-image">
+                    {% else %}
+                    <!-- If no image, display a placeholder -->
+                    <div style="background: #111; height: 100%; display: flex; align-items: center; justify-content: center;">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="60" height="60" viewBox="0 0 24 24" fill="none" stroke="#333" stroke-width="2">
+                            <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path>
+                            <circle cx="12" cy="7" r="4"></circle>
+                        </svg>
+                    </div>
+                    {% endif %}
+                    <!-- Display the barber's service as a badge -->
+                    <div class="barber-badge">{{ master.service }}</div>
+                </div>
+                <div class="barber-info">
+                    <h3 class="barber-name">{{ master.name }}</h3>
+                    <p class="barber-role">{{ master.role }}</p>
+
+                    <div class="barber-details">
+                        <!-- Display the barber's contact email -->
+                        <div class="detail-item">
+                            <svg class="detail-icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                <path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"></path>
+                                <polyline points="22,6 12,13 2,6"></polyline>
+                            </svg>
+                            <p class="detail-text">{{ master.email }}</p>
+                        </div>
+
+                        <!-- Display the barber's salon -->
+                        <div class="detail-item">
+                            <svg class="detail-icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                <path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"></path>
+                                <circle cx="12" cy="10" r="3"></circle>
+                            </svg>
+                            <p class="detail-text">{{ master.salon }}</p>
+                        </div>
+
+                        <!-- Display the barber's experience -->
+                        <div class="detail-item">
+                            <svg class="detail-icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                <circle cx="12" cy="12" r="10"></circle>
+                                <polyline points="12 6 12 12 16 14"></polyline>
+                            </svg>
+                            <p class="detail-text">{{ master.experience }} years experience</p>
+                        </div>
+                    </div>
+
+                </div>
+            </div>
+            {% endfor %}
+        </div>
+    </section>
+
+    <!-- Footer section with links -->
+    <footer class="footer">
+        <div class="footer-logo">BLACK LABEL</div>
+        <div class="footer-divider"></div>
+        <div class="footer-links">
+            <a href="#" class="footer-link">Services</a>
+            <a href="#" class="footer-link">Gallery</a>
+            <a href="#" class="footer-link">Products</a>
+            <a href="#" class="footer-link">Contact</a>
+            <a href="#" class="footer-link">FAQ</a>
+        </div>
+        <p class="copyright">© 2025 Service Booking Masters Page. All rights reserved.</p>
+    </footer>
+</body>
+</html>

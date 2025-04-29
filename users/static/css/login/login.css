@@ -1,179 +1,277 @@
-/* Основные стили для страницы входа */
+
+:root {
+    --primary: #4361ee;  /* Яркий синий */
+    --primary-light: #4895ef;  /* Голубой */
+    --primary-dark: #3a0ca3;  /* Тёмно-синий */
+    --accent: #f72585;  /* Розовый для акцентов */
+    --light: #ffffff;
+    --light-bg: #f8f9fa;
+    --text: #2b2d42;  /* Тёмно-синий вместо серого */
+    --text-light: #8d99ae;
+    --radius: 10px;
+    --shadow: 0 4px 20px rgba(67, 97, 238, 0.15);
+    --transition: all 0.3s ease;
+}
+
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    font-family: 'Roboto', sans-serif;
+}
+
 body {
-    font-family: Arial, sans-serif;
-    background-color: #f7f7f7;
+    background-color: var(--light-bg);
+    color: var(--text);
+    min-height: 100vh;
     display: flex;
     justify-content: center;
     align-items: center;
-    height: 100vh;
-    margin: 0;
-}
-
-/* Контейнер для формы */
-.login-container {
-    width: 100%;
-    max-width: 400px;
-    margin: auto;
-}
-
-/* Стили для самой формы */
-.login-form {
-    background-color: #fff;
     padding: 20px;
-    border-radius: 8px;
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
 }
 
-/* Заголовок формы */
-h2 {
-    text-align: center;
-    margin-bottom: 20px;
-    color: #333;
-}
-
-/* Поля ввода (username, password и др.) */
-input[type="text"], input[type="password"] {
+.login-wrapper {
     width: 100%;
-    padding: 12px;
-    margin: 10px 0;
-    border: 1px solid #ccc;
-    border-radius: 5px;
-    font-size: 16px;
-    box-sizing: border-box;
-    transition: border-color 0.3s ease;
+    max-width: 1200px;
+    display: flex;
+    background: white;
+    border-radius: var(--radius);
+    box-shadow: var(--shadow);
+    overflow: hidden;
 }
 
-input[type="text"]:focus, input[type="password"]:focus {
-    border-color: #4CAF50;
+/* Левая часть с градиентом */
+.login-hero {
+    flex: 1;
+    background: linear-gradient(135deg, var(--primary), var(--primary-dark));
+    color: white;
+    padding: 60px;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    position: relative;
+}
+
+.hero-content {
+    position: relative;
+    z-index: 2;
+    max-width: 500px;
+}
+
+.login-hero h1 {
+    font-size: 2.5rem;
+    margin-bottom: 20px;
+    font-weight: 700;
+}
+
+.login-hero p {
+    margin-bottom: 30px;
+    opacity: 0.9;
+    font-size: 1.1rem;
+}
+
+.features-list {
+    list-style: none;
+    margin-bottom: 40px;
+}
+
+.features-list li {
+    margin-bottom: 20px;
+    display: flex;
+    align-items: center;
+}
+
+.features-list i {
+    font-size: 1.5rem;
+    margin-right: 15px;
+    color: rgba(255,255,255,0.9);
+}
+
+/* Правая часть с формой */
+.login-form-container {
+    flex: 1;
+    max-width: 500px;
+    padding: 60px;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    position: relative;
+}
+
+.back-btn {
+    position: absolute;
+    top: 30px;
+    left: 30px;
+    color: var(--text-light);
+    font-size: 1.2rem;
+    text-decoration: none;
+    transition: var(--transition);
+}
+
+.back-btn:hover {
+    color: var(--primary);
+}
+
+.form-wrapper {
+    width: 100%;
+}
+
+.form-header {
+    margin-bottom: 40px;
+    text-align: center;
+}
+
+.form-header h2 {
+    font-size: 2rem;
+    color: var(--text);
+    margin-bottom: 10px;
+}
+
+.form-header p {
+    color: var(--text-light);
+}
+
+/* Стили формы */
+.auth-form {
+    width: 100%;
+}
+
+.form-group {
+    margin-bottom: 25px;
+}
+
+.form-group label {
+    display: block;
+    margin-bottom: 8px;
+    font-weight: 500;
+    color: var(--text);
+}
+
+.input-with-icon {
+    position: relative;
+}
+
+.input-with-icon i {
+    position: absolute;
+    left: 15px;
+    top: 50%;
+    transform: translateY(-50%);
+    color: var(--text-light);
+}
+
+.input-with-icon input {
+    width: 100%;
+    padding: 14px 15px 14px 45px;
+    border: 1px solid #e2e8f0;
+    border-radius: var(--radius);
+    font-size: 1rem;
+    transition: var(--transition);
+    color: var(--text);
+}
+
+.input-with-icon input:focus {
+    border-color: var(--primary);
+    box-shadow: 0 0 0 3px rgba(67, 97, 238, 0.2);
     outline: none;
 }
 
-/* Кнопка отправки формы */
-.btn {
-    background-color: #4CAF50;
-    color: white;
-    padding: 12px 20px;
-    border: none;
-    cursor: pointer;
-    width: 100%;
-    font-size: 16px;
-    border-radius: 5px;
-    transition: background-color 0.3s ease;
-    margin-top: 20px;
+.form-options {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 25px;
 }
 
-.btn:hover {
-    background-color: #45a049;
-}
-
-/* Стили для сообщений об ошибках */
-.alert-messages {
-    margin-top: 15px;
-    padding: 10px;
-    background-color: #f8d7da;
-    color: #721c24;
-    border-radius: 5px;
-    font-size: 14px;
-}
-
-.alert {
-    margin-bottom: 10px;
-}
-
-/* Стиль для кнопки "Register" */
-.sign-in-btn {
-    background-color: #007bff;
-    color: white;
-    padding: 12px 20px;
-    border: none;
-    cursor: pointer;
-    font-size: 16px;
-    border-radius: 5px;
-    transition: background-color 0.3s ease;
-    width: auto;
-    margin-top: 15px;
-    text-align: center;
-}
-
-.sign-in-btn:hover {
-    background-color: #0056b3;
-}
-
-/* Текст для уже зарегистрированных пользователей */
-.already-account-text {
-    text-align: center;
-    margin-top: 20px;
-    font-size: 14px;
-}
-
-.already-account-text a {
-    text-decoration: none;
-}
-
-.already-account-text a .sign-in-btn {
-    width: auto;
-}
-
-/* Стили для кнопки возврата на главную страницу */
-.back-to-home {
-    position: absolute;
-    top: 20px;
-    left: 20px;
-}
-
-.back-to-home-btn {
-    background-color: transparent;
-    color: #007bff;
-    font-size: 16px;
-    text-decoration: none;
-    padding: 10px 15px;
-    border: 2px solid #007bff;
-    border-radius: 5px;
+.remember-me {
     display: flex;
     align-items: center;
-    transition: background-color 0.3s, border-color 0.3s;
 }
 
-.back-to-home-btn i {
-    margin-right: 10px; /* Отступ для стрелки */
+.remember-me input {
+    margin-right: 8px;
+    accent-color: var(--primary);
 }
 
-.back-to-home-btn:hover {
-    background-color: #007bff;
-    color: white;
-    border-color: #0056b3;
-}
-
-/* Добавляем отступы и стили для сообщений */
-.alert-messages {
-    margin-top: 20px;
-}
-
-.alert {
-    background-color: #f8d7da;
-    color: #721c24;
-    padding: 10px;
-    border: 1px solid #f5c6cb;
-    border-radius: 5px;
-    margin-bottom: 10px;
-}
-
-
-/* Стили для текста "Forgot Password" */
-.forgot-password-text {
-    margin-top: 15px;
-    font-size: 14px;
-    text-align: center;
-}
-
-.forgot-password-text a {
-    color: #007bff;
+.forgot-password {
+    color: var(--primary);
     text-decoration: none;
+    font-size: 0.9rem;
+    transition: var(--transition);
 }
 
-.forgot-password-text a:hover {
+.forgot-password:hover {
+    color: var(--primary-dark);
     text-decoration: underline;
 }
 
+/* Кнопка входа */
+.btn {
+    display: inline-block;
+    padding: 14px 24px;
+    border-radius: var(--radius);
+    font-size: 1rem;
+    font-weight: 500;
+    cursor: pointer;
+    transition: var(--transition);
+    border: none;
+    text-align: center;
+}
+
+.btn-primary {
+    background-color: var(--primary);
+    color: white;
+    width: 100%;
+}
+
+.btn-primary:hover {
+    background-color: var(--primary-dark);
+    transform: translateY(-2px);
+    box-shadow: 0 4px 12px rgba(67, 97, 238, 0.3);
+}
+
+/* Футер формы */
+.auth-footer {
+    margin-top: 30px;
+    text-align: center;
+    color: var(--text-light);
+}
+
+.auth-footer a {
+    color: var(--primary);
+    text-decoration: none;
+    font-weight: 500;
+    transition: var(--transition);
+}
+
+.auth-footer a:hover {
+    color: var(--primary-dark);
+    text-decoration: underline;
+}
+
+/* Адаптивность */
+@media (max-width: 992px) {
+    .login-wrapper {
+        flex-direction: column;
+    }
+
+    .login-hero {
+        display: none;
+    }
+
+    .login-form-container {
+        max-width: 100%;
+        padding: 40px;
+    }
+}
+
+@media (max-width: 576px) {
+    .login-form-container {
+        padding: 30px 20px;
+    }
+
+    .form-header h2 {
+        font-size: 1.8rem;
+    }
+}
 
 

@@ -1,0 +1,100 @@
+{% extends "admin_base.html" %}
+{% load static %}
+{% block title %}Promotions Management{% endblock %}
+
+{% block content %}
+<link rel="stylesheet" href="{% static 'admin_panel/promotion/promotion_list.css' %}">
+
+<div class="promotions-container">
+    <div class="promotions-header">
+        <h2><i class="fas fa-tag"></i> Promotions</h2>
+        <a href="{% url 'create_promotion' %}" class="btn-add-promotion">
+            <i class="fas fa-plus"></i> Add Promotion
+        </a>
+    </div>
+
+    <div class="promotions-stats">
+        <div class="stat-card">
+            <div class="stat-value">{{ active_promotions_count }}</div>
+            <div class="stat-label">Active Promotions</div>
+        </div>
+        <div class="stat-card">
+            <div class="stat-value">{{ upcoming_promotions_count }}</div>
+            <div class="stat-label">Upcoming</div>
+        </div>
+        <div class="stat-card">
+            <div class="stat-value">{{ expired_promotions_count }}</div>
+            <div class="stat-label">Expired</div>
+        </div>
+    </div>
+
+    <div class="promotions-table-container">
+        <table class="promotions-table">
+            <thead>
+                <tr>
+                    <th>Title</th>
+                    <th>Discount</th>
+                    <th>Duration</th>
+                    <th>Status</th>
+                    <th>Actions</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for promo in promotions %}
+                <tr>
+                    <td class="promo-title">{{ promo.title }}</td>
+                    <td class="promo-discount">
+                        <span class="discount-badge">{{ promo.discount_percent }}%</span>
+                    </td>
+                    <td class="promo-dates">
+                        <div class="date-range">
+                            <div><i class="far fa-calendar-alt"></i> {{ promo.start_date|date:"M d, Y" }}</div>
+                            <div class="date-arrow"><i class="fas fa-arrow-right"></i></div>
+                            <div><i class="far fa-calendar-alt"></i> {{ promo.end_date|date:"M d, Y" }}</div>
+                        </div>
+                        <div class="days-left">
+                            {% if promo.is_active %}
+                                Ends in {{ promo.days_remaining }} day{{ promo.days_remaining|pluralize }}
+                            {% elif promo.is_upcoming %}
+                                Starts in {{ promo.days_until_start }} day{{ promo.days_until_start|pluralize }}
+                            {% else %}
+                                Expired
+                            {% endif %}
+                        </div>
+                    </td>
+                    <td>
+                        <span class="status-badge {% if promo.is_active %}active{% elif promo.is_upcoming %}upcoming{% else %}expired{% endif %}">
+                            {% if promo.is_active %}
+                                <i class="fas fa-check-circle"></i> Active
+                            {% elif promo.is_upcoming %}
+                                <i class="fas fa-clock"></i> Upcoming
+                            {% else %}
+                                <i class="fas fa-times-circle"></i> Expired
+                            {% endif %}
+                        </span>
+                    </td>
+                    <!-- Update the actions column in promotions_list.html -->
+                <td class="actions">
+                    <a href="{% url 'edit_promotion' promo.pk %}" class="btn-action btn-edit" title="Edit">
+                        <i class="fas fa-edit"></i>
+                    </a>
+                    <a href="{% url 'delete_promotion' promo.pk %}" class="btn-action btn-delete" title="Delete">
+                        <i class="fas fa-trash-alt"></i>
+                    </a>
+                </td>
+                </tr>
+                {% empty %}
+                <tr>
+                    <td colspan="5" class="no-promotions">
+                        <i class="fas fa-tag"></i>
+                        <span>No promotions available</span>
+                    </td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+</div>
+
+
+{% endblock %}

@@ -1,8 +1,9 @@
-from doctest import master
+from lib2to3.fixes.fix_input import context
+from django.utils import timezone
 from django.conf import settings
 from django.contrib import messages
 from django.core.mail import send_mail
-from django.http import JsonResponse, HttpResponse
+from django.http import HttpResponse
 from django.shortcuts import render, get_object_or_404, redirect
 from django.contrib.auth.decorators import login_required
 from django.urls import reverse
@@ -12,6 +13,8 @@ from .decorators import owner_required
 from users.models import Booking
 from users.models import Review
 from users.models import Master
+from users.models import Promotion
+from users.forms import PromotionForm
 
 
 @login_required
@@ -21,23 +24,17 @@ def manage_users(request):
 
     # Get filter parameters from the request
     username_query = request.GET.get('username', '').strip()
-    role_query = request.GET.get('role', '')
 
     if username_query:
         users = users.filter(username__icontains=username_query)
 
-    if role_query:
-        users = users.filter(role=role_query)
-
-    return render(request, 'manage_users.html', {'users': users})
+    return render(request, 'user/manage_users.html', {'users': users})
 
 
 @login_required
 def update_user_role(request, user_id):
     user = get_object_or_404(CustomUser, id=user_id)
     if request.method == "POST":
-        new_role = request.POST.get("role")
-        user.is_owner = new_role == "owner"  # If "owner" is selected, set to True
         user.save()
     return redirect("manage_users")
 
@@ -52,7 +49,7 @@ def manage_bookings(request):
     else:
         bookings = Booking.objects.all()  # If no filter is selected, show all
 
-    return render(request, 'manage_bookings.html', {'bookings': bookings})
+    return render(request, 'bookings/manage_bookings.html', {'bookings': bookings})
 
 
 @login_required
@@ -158,7 +155,7 @@ def submit_review_email(request, booking_id):
 def reviews_list(request):
     """Displays the list of reviews in the admin panel"""
     reviews = Review.objects.all().order_by('-created_at')  # Latest reviews first
-    return render(request, 'review_list.html', {'reviews': reviews})
+    return render(request, 'review/review_list.html', {'reviews': reviews})
 
 
 @login_required
@@ -166,4 +163,75 @@ def user_detail(request, user_id):
     user = get_object_or_404(CustomUser, id=user_id)
     bookings = Booking.objects.filter(user=user).order_by("-booking_date")
 
-    return render(request, "user_detail.html", {"user": user, "bookings": bookings})
+    return render(request, "user/user_detail.html", {"user": user, "bookings": bookings})
+
+
+def promotions_list(request):
+    promotions = Promotion.objects.all()
+    today = timezone.now().date()
+
+    active_promotions_count = Promotion.objects.filter(
+        start_date__lte=today,
+        end_date__gte=today
+    ).count()
+
+    upcoming_promotions_count = Promotion.objects.filter(
+        start_date__gt=today
+    ).count()
+
+    expired_promotions_count = Promotion.objects.filter(
+        end_date__lt=today
+    ).count()
+
+    return render(request, 'promotion/promotions_list.html', {
+        'promotions': promotions,
+        'active_promotions_count': active_promotions_count,
+        'upcoming_promotions_count': upcoming_promotions_count,
+        'expired_promotions_count': expired_promotions_count,
+    })
+
+def create_promotion(request):
+    if request.method == "POST":
+        form = PromotionForm(request.POST)
+        if form.is_valid():
+            promotion = form.save(commit=False)
+            promotion.save()
+            return redirect('admin_promotions')
+    else:
+        form = PromotionForm()
+
+    return render(request, 'promotion/promotion_form.html', {
+        'form': form,
+        'title': 'Создание новой акции'
+    })
+
+
+def edit_promotion(request, pk):
+    promotion = get_object_or_404(Promotion, pk=pk)
+    if request.method == "POST":
+        form = PromotionForm(request.POST, instance=promotion)
+        if form.is_valid():
+            form.save()
+            return redirect('admin_promotions')
+    else:
+        form = PromotionForm(instance=promotion)
+
+    return render(request, 'promotion/promotion_form.html', {
+        'form': form,
+        'title': 'Edit Promotion'
+    })
+
+
+def delete_promotion(request, pk):
+    promotion = get_object_or_404(Promotion, pk=pk)
+    if request.method == "POST":
+        promotion.delete()
+        return redirect('admin_promotions')
+
+    return render(request, 'delete_confirmation/delete_confirmation.html', {
+        'object': promotion,
+        'title': 'Delete Promotion'
+    })
+
+
+

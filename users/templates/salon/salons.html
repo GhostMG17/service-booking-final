@@ -1,0 +1,135 @@
+{% load static %}
+
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Luxury Salons Collection</title>
+
+    <!-- Google Fonts for styling the website (Playfair Display for headings, Montserrat for text) -->
+    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;700&family=Montserrat:wght@300;400;500&display=swap" rel="stylesheet">
+
+    <!-- Link to external CSS file for styling the page -->
+    <link rel="stylesheet" href="{% static 'css/salon/salons.css' %}" />
+
+    <!-- Link to external JavaScript file for interactive elements -->
+    <script src="{% static 'js/salons.js'%}"></script>
+
+</head>
+<body>
+    <!-- Back to Home button with an arrow icon -->
+    <a href="/" class="back-home">
+        <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <line x1="19" y1="12" x2="5" y2="12"></line>
+            <polyline points="12 19 5 12 12 5"></polyline>
+        </svg>
+        Back to Home
+    </a>
+
+    <!-- Hero section for showcasing the main message and call to action -->
+    <section class="hero-section">
+        <div class="hero-content">
+            <!-- Main title of the page -->
+            <h1 class="hero-title">Luxury Salons</h1>
+
+            <!-- Divider line under the title -->
+            <div class="hero-divider"></div>
+
+            <!-- Subtitle providing more context or tagline -->
+            <p class="hero-subtitle">Elegance redefined</p>
+        </div>
+
+        <!-- Scroll down indicator -->
+        <div class="scroll-down">
+            <span>Our Locations</span>
+            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <path d="M7 13l5 5 5-5M7 6l5 5 5-5"/>
+            </svg>
+        </div>
+    </section>
+
+    <!-- Salons Section where individual salon details will be listed -->
+    <section class="salons-section">
+        <div class="section-header">
+            <!-- Section title -->
+            <h2 class="section-title">Salons</h2>
+            <!-- Section subtitle -->
+            <p class="section-subtitle">Exclusive locations</p>
+        </div>
+
+        <!-- Grid layout for displaying each salon -->
+        <div class="salons-grid">
+            <!-- Loop to dynamically display each salon -->
+            {% for salon in salons %}
+            <a href="{% url 'salon_detail' salon.id %}" class="salon-card">
+                <!-- Container for salon image (currently empty, can be replaced with an image) -->
+                <div class="salon-image-container">
+                    <!-- Placeholder for salon image (could be dynamically added later) -->
+                    <div style="background: #f0f0f0; height: 100%; display: flex; align-items: center; justify-content: center;">
+                        <!-- Placeholder icon representing a building or salon -->
+                        <svg xmlns="http://www.w3.org/2000/svg" width="60" height="60" viewBox="0 0 24 24" fill="none" stroke="#ccc" stroke-width="2">
+                            <path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"></path>
+                            <polyline points="9 22 9 12 15 12 15 22"></polyline>
+                        </svg>
+                    </div>
+                    <!-- Badge to highlight that the salon is Premium -->
+                    <div class="salon-badge">Premium</div>
+                </div>
+
+                <!-- Salon information including name, location, and contact -->
+                <div class="salon-info">
+                    <!-- Salon name -->
+                    <h3 class="salon-name">{{ salon.name }}</h3>
+
+                    <!-- Salon location with an icon for visual representation -->
+                    <p class="salon-location">
+                        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"></path>
+                            <circle cx="12" cy="10" r="3"></circle>
+                        </svg>
+                        {{ salon.location }}
+                    </p>
+
+                    <!-- Contact email section -->
+                    <div class="salon-contact">
+                        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"></path>
+                            <polyline points="22,6 12,13 2,6"></polyline>
+                        </svg>
+                        {{ salon.contact_email }}
+                    </div>
+
+                    <!-- View details link with an icon indicating more information -->
+                    <span class="view-details">
+                        View details
+                        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <line x1="5" y1="12" x2="19" y2="12"></line>
+                            <polyline points="12 5 19 12 12 19"></polyline>
+                        </svg>
+                    </span>
+                </div>
+            </a>
+            {% endfor %}
+        </div>
+    </section>
+
+    <!-- Footer section containing logo and links -->
+    <footer class="footer">
+        <!-- Footer logo (could be linked to the home page) -->
+        <div class="footer-logo">LUXURY SALONS</div>
+        <div class="footer-divider"></div>
+
+        <!-- Footer navigation links -->
+        <div class="footer-links">
+            <a href="#" class="footer-link">About</a>
+            <a href="#" class="footer-link">Services</a>
+            <a href="#" class="footer-link">Careers</a>
+            <a href="#" class="footer-link">Contact</a>
+        </div>
+
+        <!-- Copyright notice -->
+        <p class="copyright">© 2025 Luxury Salons Collection. All rights reserved.</p>
+    </footer>
+
+</body>
+</html>

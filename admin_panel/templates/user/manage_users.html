@@ -1,0 +1,195 @@
+{% extends "admin_base.html" %}
+{% load static %}
+{% block title %}User Management{% endblock %}
+
+{% block content %}
+
+<link rel="stylesheet" href="{% static 'admin_panel/manage_users/manage_users.css'%}">
+
+<div class="card mb-4">
+    <div class="card-header d-flex justify-content-between align-items-center">
+        <h5 class="mb-0"><i class="fas fa-users me-3"></i>User Management</h5>
+    </div>
+    <div class="card-body">
+        <!-- Filter Form -->
+        <form method="GET" class="row g-3 mb-4">
+            <div class="col-md-4">
+                <div class="input-group">
+                    <span class="input-group-text"><i class="fas fa-search"></i></span>
+                    <input type="text" name="username" class="form-control" placeholder="Search by username" value="{{ request.GET.username }}">
+                </div>
+            </div>
+            <div class="col-md-3">
+                <select name="role" class="form-select">
+                    <option value="">All roles</option>
+                    <option value="user" {% if request.GET.role == "user" %}selected{% endif %}>User</option>
+                    <option value="owner" {% if request.GET.role == "owner" %}selected{% endif %}>Owner</option>
+                    <option value="admin" {% if request.GET.role == "admin" %}selected{% endif %}>Admin</option>
+                </select>
+            </div>
+            <div class="col-md-2">
+                <button type="submit" class="btn btn-primary w-100">
+                    <i class="fas fa-filter me-1"></i> Filter
+                </button>
+            </div>
+            <div class="col-md-3 text-end">
+                {% if request.GET.username or request.GET.role %}
+                    <a href="{% url 'manage_users' %}" class="btn btn-outline-secondary">
+                        <i class="fas fa-times me-1"></i> Clear filters
+                    </a>
+                {% endif %}
+            </div>
+        </form>
+
+        <!-- Users Table -->
+        <div class="table-responsive">
+            <table class="table table-hover">
+                <thead class="table-light">
+                    <tr>
+                        <th width="5%">ID</th>
+                        <th width="25%">User</th>
+                        <th width="20%">Email</th>
+                        <th width="15%">Status</th>
+                        <th width="15%">Actions</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for user in users %}
+                    <tr>
+                        <td>{{ user.id }}</td>
+                        <td>
+                            <div class="d-flex align-items-center">
+                                <div class="avatar me-3">
+                                    <span class="avatar-initial bg-primary rounded-circle">
+                                        {{ user.username|first|upper }}
+                                    </span>
+                                </div>
+                                <div>
+                                    <a href="{% url 'user_detail' user.id %}" class="text-dark fw-semibold">{{ user.username }}</a>
+                                    <small class="d-block text-muted">Joined: {{ user.date_joined|date:"M d, Y" }}</small>
+                                </div>
+                            </div>
+                        </td>
+                        <td>{{ user.email|default:"-" }}</td>
+
+                        <td>
+                            {% if user.is_active %}
+                                <span class="badge bg-success">Active</span>
+                            {% else %}
+                                <span class="badge bg-danger">Inactive</span>
+                            {% endif %}
+                        </td>
+                        <td>
+                            <div class="d-flex">
+                                <a href="{% url 'user_detail' user.id %}" class="btn btn-sm btn-outline-primary me-2" title="View">
+                                    <i class="fas fa-eye"></i>
+                                </a>
+                                <form method="POST" action="" class="status-form">
+                                    {% csrf_token %}
+                                    <button type="submit" class="btn btn-sm {% if user.is_active %}btn-outline-danger{% else %}btn-outline-success{% endif %}" title="{% if user.is_active %}Deactivate{% else %}Activate{% endif %}">
+                                        {% if user.is_active %}
+                                            <i class="fas fa-user-slash"></i>
+                                        {% else %}
+                                            <i class="fas fa-user-check"></i>
+                                        {% endif %}
+                                    </button>
+                                </form>
+                            </div>
+                        </td>
+                    </tr>
+                    {% empty %}
+                    <tr>
+                        <td colspan="6" class="text-center py-4">
+                            <div class="d-flex flex-column align-items-center">
+                                <i class="fas fa-users-slash text-muted mb-2" style="font-size: 2rem;"></i>
+                                <p class="text-muted">No users found</p>
+                                {% if request.GET.username or request.GET.role %}
+                                    <a href="{% url 'manage_users' %}" class="btn btn-sm btn-outline-primary">
+                                        Clear filters
+                                    </a>
+                                {% endif %}
+                            </div>
+                        </td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+
+        <!-- Pagination -->
+        {% if users.has_other_pages %}
+        <nav aria-label="Page navigation">
+            <ul class="pagination justify-content-center">
+                {% if users.has_previous %}
+                    <li class="page-item">
+                        <a class="page-link" href="?page=1{% if request.GET.username %}&username={{ request.GET.username }}{% endif %}{% if request.GET.role %}&role={{ request.GET.role }}{% endif %}" aria-label="First">
+                            <span aria-hidden="true">&laquo;&laquo;</span>
+                        </a>
+                    </li>
+                    <li class="page-item">
+                        <a class="page-link" href="?page={{ users.previous_page_number }}{% if request.GET.username %}&username={{ request.GET.username }}{% endif %}{% if request.GET.role %}&role={{ request.GET.role }}{% endif %}" aria-label="Previous">
+                            <span aria-hidden="true">&laquo;</span>
+                        </a>
+                    </li>
+                {% endif %}
+
+                {% for num in users.paginator.page_range %}
+                    {% if users.number == num %}
+                        <li class="page-item active"><span class="page-link">{{ num }}</span></li>
+                    {% elif num > users.number|add:'-3' and num < users.number|add:'3' %}
+                        <li class="page-item">
+                            <a class="page-link" href="?page={{ num }}{% if request.GET.username %}&username={{ request.GET.username }}{% endif %}{% if request.GET.role %}&role={{ request.GET.role }}{% endif %}">{{ num }}</a>
+                        </li>
+                    {% endif %}
+                {% endfor %}
+
+                {% if users.has_next %}
+                    <li class="page-item">
+                        <a class="page-link" href="?page={{ users.next_page_number }}{% if request.GET.username %}&username={{ request.GET.username }}{% endif %}{% if request.GET.role %}&role={{ request.GET.role }}{% endif %}" aria-label="Next">
+                            <span aria-hidden="true">&raquo;</span>
+                        </a>
+                    </li>
+                    <li class="page-item">
+                        <a class="page-link" href="?page={{ users.paginator.num_pages }}{% if request.GET.username %}&username={{ request.GET.username }}{% endif %}{% if request.GET.role %}&role={{ request.GET.role }}{% endif %}" aria-label="Last">
+                            <span aria-hidden="true">&raquo;&raquo;</span>
+                        </a>
+                    </li>
+                {% endif %}
+            </ul>
+        </nav>
+        {% endif %}
+    </div>
+</div>
+
+
+<script>
+    // Auto-submit role change forms
+    $(document).ready(function() {
+        $('.role-select').change(function() {
+            const userId = $(this).data('user-id');
+            const newRole = $(this).val();
+
+            // Show confirmation for role changes
+            if (confirm(`Are you sure you want to change this user's role to ${newRole}?`)) {
+                $(this).closest('form').submit();
+            } else {
+                // Reset to original value
+                $(this).val($(this).data('previous-value'));
+            }
+        });
+
+        // Store initial values for role selects
+        $('.role-select').each(function() {
+            $(this).data('previous-value', $(this).val());
+        });
+
+        // Confirm before deactivating/activating user
+        $('.status-form').submit(function(e) {
+            const isActive = $(this).find('button').hasClass('btn-outline-danger');
+            if (!confirm(`Are you sure you want to ${isActive ? 'deactivate' : 'activate'} this user?`)) {
+                e.preventDefault();
+            }
+        });
+    });
+</script>
+{% endblock %}

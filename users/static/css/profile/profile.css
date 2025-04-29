@@ -1,85 +1,376 @@
-/* Общие стили для страницы */
-body {
-    font-family: Arial, sans-serif;
-    background-color: #f4f7fc;
-    padding: 20px;
+:root {
+    --primary-color: #6c5ce7;
+    --primary-light: #a29bfe;
+    --primary-dark: #5649c0;
+    --secondary-color: #00cec9;
+    --dark-text: #2d3436;
+    --light-text: #636e72;
+    --light-bg: #f8f9fa;
+    --success-color: #00b894;
+    --warning-color: #fdcb6e;
+    --danger-color: #d63031;
+    --border-radius: 12px;
+    --box-shadow: 0 10px 30px rgba(0,0,0,0.08);
 }
 
-/* Контейнер профиля */
+/* Profile Container */
 .profile-container {
-    width: 80%;
-    margin: 0 auto;
-    background-color: #fff;
-    padding: 20px;
-    border-radius: 10px;
-    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+    max-width: 1200px;
+    margin: 40px auto;
+    padding: 0 20px;
 }
 
-/* Стиль для карточек */
-.card {
-    background-color: #f9f9f9;
-    padding: 15px;
-    margin-bottom: 20px;
-    border-radius: 8px;
-    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+/* Profile Header */
+.profile-header {
+    display: flex;
+    align-items: center;
+    margin-bottom: 30px;
 }
 
-/* Заголовок */
-.card h2, .card h3 {
-    font-size: 1.8em;
-    color: #333;
-}
-
-/* Стили для каждого абзаца */
-.card p {
-    font-size: 1.1em;
-    color: #555;
-    margin: 5px 0;
-}
-
-/* История бронирований */
-.booking-history ul {
-    list-style-type: none;
-    padding: 0;
-}
-
-.booking-history li {
-    background-color: #fff;
-    padding: 10px;
-    margin-bottom: 10px;
-    border-radius: 5px;
-    box-shadow: 0 1px 4px rgba(0, 0, 0, 0.1);
-}
-
-.booking-history li strong {
-    color: #333;
-}
-
-/* Ссылка на редактирование профиля */
-.update-profile-link {
-    text-align: center;
-    margin-top: 20px;
-}
-
-.update-profile-link a {
-    text-decoration: none;
-    font-size: 1.2em;
-    color: #007bff;
-    font-weight: bold;
-}
-
-.update-profile-link a:hover {
-    color: #0056b3;
-}
-
-.alert {
-    background-color: #4CAF50; /* Зеленый для успешных сообщений */
+.profile-avatar {
+    width: 100px;
+    height: 100px;
+    border-radius: 50%;
+    background-color: var(--primary-light);
+    display: flex;
+    align-items: center;
+    justify-content: center;
     color: white;
-    padding: 10px;
-    border-radius: 5px;
+    font-size: 2.5rem;
+    font-weight: bold;
+    margin-right: 25px;
+    box-shadow: var(--box-shadow);
+}
+
+.profile-title {
+    font-size: 2rem;
+    color: var(--dark-text);
+    margin-bottom: 5px;
+}
+
+.profile-subtitle {
+    color: var(--light-text);
+    font-size: 1rem;
+}
+
+/* Profile Grid */
+.profile-grid {
+    display: grid;
+    grid-template-columns: 1fr 2fr;
+    gap: 25px;
+}
+
+@media (max-width: 768px) {
+    .profile-grid {
+        grid-template-columns: 1fr;
+    }
+}
+
+/* Profile Card */
+.profile-card {
+    background: white;
+    border-radius: var(--border-radius);
+    padding: 25px;
+    box-shadow: var(--box-shadow);
+    margin-bottom: 25px;
+    position: relative;
+    overflow: hidden;
+}
+
+.profile-card h2 {
+    color: var(--primary-dark);
+    font-size: 1.5rem;
+    margin-bottom: 20px;
+    padding-bottom: 10px;
+    border-bottom: 2px solid var(--primary-light);
+}
+
+/* Info Item */
+.info-item {
+    display: flex;
     margin-bottom: 15px;
 }
 
-.alert p {
-    margin: 0;
+.info-label {
+    font-weight: 600;
+    color: var(--dark-text);
+    min-width: 120px;
 }
+
+.info-value {
+    color: var(--light-text);
+    flex: 1;
+}
+
+/* Booking History */
+.booking-item {
+    border-left: 4px solid var(--primary-color);
+    padding: 15px;
+    margin-bottom: 15px;
+    background: white;
+    border-radius: var(--border-radius);
+    box-shadow: 0 3px 15px rgba(0,0,0,0.05);
+    transition: all 0.3s ease;
+    position: relative;
+}
+
+.booking-item:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 5px 20px rgba(0,0,0,0.1);
+}
+
+.booking-service {
+    font-weight: 600;
+    color: var(--primary-dark);
+    margin-bottom: 5px;
+}
+
+.booking-meta {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 15px;
+    margin-bottom: 10px;
+}
+
+.booking-date, .booking-time, .booking-status {
+    display: flex;
+    align-items: center;
+    color: var(--light-text);
+    font-size: 0.9rem;
+}
+
+.booking-date i, .booking-time i, .booking-status i {
+    margin-right: 5px;
+    color: var(--primary-light);
+}
+
+.booking-status .status-badge {
+    padding: 3px 8px;
+    border-radius: 20px;
+    font-size: 0.8rem;
+    font-weight: 500;
+}
+
+.status-active {
+    background-color: rgba(0, 184, 148, 0.1);
+    color: var(--success-color);
+}
+
+.status-pending {
+    background-color: rgba(253, 203, 110, 0.1);
+    color: #e17055;
+}
+
+.status-completed {
+    background-color: rgba(108, 92, 231, 0.1);
+    color: var(--primary-dark);
+}
+
+.status-cancelled {
+    background-color: rgba(214, 48, 49, 0.1);
+    color: var(--danger-color);
+}
+
+.booking-actions {
+    display: flex;
+    gap: 10px;
+    margin-top: 10px;
+}
+
+.btn {
+    padding: 8px 15px;
+    border-radius: 6px;
+    font-size: 0.85rem;
+    font-weight: 500;
+    border: none;
+    cursor: pointer;
+    transition: all 0.2s ease;
+}
+
+.btn-primary {
+    background-color: var(--primary-color);
+    color: white;
+}
+
+.btn-primary:hover {
+    background-color: var(--primary-dark);
+}
+
+.btn-outline {
+    background: transparent;
+    border: 1px solid var(--primary-color);
+    color: var(--primary-color);
+}
+
+.btn-outline:hover {
+    background-color: rgba(108, 92, 231, 0.1);
+}
+
+.btn-danger {
+    background-color: var(--danger-color);
+    color: white;
+}
+
+.btn-danger:hover {
+    background-color: #c0392b;
+}
+
+/* Empty State */
+.empty-state {
+    text-align: center;
+    padding: 40px 20px;
+}
+
+.empty-state i {
+    font-size: 3rem;
+    color: var(--primary-light);
+    margin-bottom: 15px;
+}
+
+.empty-state h3 {
+    color: var(--dark-text);
+    margin-bottom: 10px;
+}
+
+.empty-state p {
+    color: var(--light-text);
+    margin-bottom: 20px;
+}
+
+/* Edit Profile Button */
+.edit-profile-btn {
+    position: absolute;
+    top: 20px;
+    right: 20px;
+    background: var(--primary-color);
+    color: white;
+    border: none;
+    padding: 8px 15px;
+    border-radius: 6px;
+    font-size: 0.85rem;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    text-decoration: none;
+    display: inline-block;
+}
+
+.edit-profile-btn:hover {
+    background: var(--primary-dark);
+    color: white;
+}
+
+/* Pagination */
+.pagination {
+    display: flex;
+    justify-content: center;
+    margin-top: 30px;
+}
+
+.page-item {
+    margin: 0 5px;
+}
+
+.page-link {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 40px;
+    height: 40px;
+    border-radius: 50% !important;
+    color: var(--primary-color);
+    border: 1px solid #dfe6e9;
+    transition: all 0.2s ease;
+}
+
+.page-item.active .page-link {
+    background: var(--primary-color);
+    color: white;
+    border-color: var(--primary-color);
+}
+
+.page-item:not(.active) .page-link:hover {
+    background: rgba(108, 92, 231, 0.1);
+    border-color: var(--primary-light);
+}
+
+/* Responsive Adjustments */
+@media (max-width: 576px) {
+    .profile-header {
+        flex-direction: column;
+        text-align: center;
+    }
+
+    .profile-avatar {
+        margin-right: 0;
+        margin-bottom: 15px;
+    }
+
+    .booking-meta {
+        flex-direction: column;
+        gap: 5px;
+    }
+
+    .booking-actions {
+        flex-direction: column;
+    }
+
+    .btn {
+        width: 100%;
+    }
+}
+
+/* Animations */
+@keyframes fadeIn {
+    from { opacity: 0; transform: translateY(20px); }
+    to { opacity: 1; transform: translateY(0); }
+}
+
+.profile-card, .booking-item {
+    animation: fadeIn 0.5s ease forwards;
+}
+
+/* Booking Details Styles */
+.booking-details {
+    padding: 15px;
+}
+
+.detail-item {
+    display: flex;
+    margin-bottom: 10px;
+}
+
+.detail-label {
+    font-weight: 600;
+    min-width: 100px;
+    color: #555;
+}
+
+.detail-value {
+    flex: 1;
+}
+
+/* Style for the view details button */
+.view-booking {
+    margin-left: 8px;
+}
+
+/* Modal styling */
+.modal-header {
+    background-color: #f8f9fa;
+    border-bottom: 1px solid #dee2e6;
+}
+
+.modal-title {
+    color: #495057;
+}
+
+
+
+.booking-item:nth-child(1) { animation-delay: 0.1s; }
+.booking-item:nth-child(2) { animation-delay: 0.2s; }
+.booking-item:nth-child(3) { animation-delay: 0.3s; }
+.booking-item:nth-child(4) { animation-delay: 0.4s; }
+.booking-item:nth-child(5) { animation-delay: 0.5s; }
+
+
+

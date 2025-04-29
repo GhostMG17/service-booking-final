@@ -1,0 +1,446 @@
+{% extends 'base.html' %}
+{% load static %}
+{% block title %}Home | Booking{% endblock %}
+
+{% block content %}
+<link rel="stylesheet" href="{% static 'css/home/home.css' %}">
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+<link href="https://unpkg.com/aos@2.3.1/dist/aos.css" rel="stylesheet">
+<script src="https://unpkg.com/aos@2.3.1/dist/aos.js"></script>
+
+<!-- Hero Section: Main header with call-to-action buttons -->
+<section class="hero-section position-relative" style="background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);">
+    <div class="container py-7 py-lg-8 position-relative z-index-1">
+        <div class="row justify-content-center">
+            <div class="col-lg-8 text-center">
+                <!-- Main title of the hero section -->
+                <h1 class="display-3 fw-bold text-white mb-4 animate__animated animate__fadeInDown">
+                    Discover & Book Services Effortlessly
+                </h1>
+                <!-- Description text below the title -->
+                <p class="lead text-white mb-5 animate__animated animate__fadeIn animate__delay-1s">
+                    Your time is precious. We make booking appointments simple, fast, and convenient.
+                </p>
+                <!-- Buttons to book now or explore services, conditionally displayed based on user authentication -->
+                <div class="d-flex flex-column flex-sm-row justify-content-center gap-3 animate__animated animate__fadeIn animate__delay-2s">
+                    {% if user.is_authenticated %}
+                    <!-- Button to book an appointment if the user is authenticated -->
+                    <a href="{% url 'booking_page' %}" class="btn btn-lg btn-light rounded-pill px-4">
+                        <i class="fas fa-calendar-plus me-2"></i>Book Now
+                    </a>
+                    <!-- Button to explore available services -->
+                    <a href="{% url 'service_list' %}" class="btn btn-lg btn-outline-light rounded-pill px-4">
+                        Explore Services
+                    </a>
+                    {% else %}
+                    <!-- Button to sign up if the user is not authenticated -->
+                    <a href="{% url 'register' %}" class="btn btn-lg btn-light rounded-pill px-4">
+                        <i class="fas fa-user-plus me-2"></i>Sign Up
+                    </a>
+                    <!-- Button to log in if the user is not authenticated -->
+                    <a href="{% url 'login' %}" class="btn btn-lg btn-outline-light rounded-pill px-4">
+                        <i class="fas fa-sign-in-alt me-2"></i>Login
+                    </a>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+    </div>
+    <!-- Wave divider at the bottom of the section to create a smooth transition -->
+    <div class="wave-divider-bottom">
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1440 100">
+            <path fill="#fff" fill-opacity="1" d="M0,64L48,80C96,96,192,128,288,128C384,128,480,96,576,96C672,96,768,128,864,149.3C960,171,1056,181,1152,170.7C1248,160,1344,128,1392,112L1440,96L1440,100L1392,100C1344,100,1248,100,1152,100C1056,100,960,100,864,100C768,100,672,100,576,100C480,100,384,100,288,100C192,100,96,100,48,100L0,100Z"></path>
+        </svg>
+    </div>
+</section>
+
+<!-- How It Works Section: Step-by-step explanation of the booking process -->
+<section class="py-8 bg-white position-relative">
+    <div class="container">
+        <div class="row justify-content-center mb-5">
+            <div class="col-lg-8 text-center">
+                <!-- Section title and description -->
+                <span class="text-uppercase text-primary fw-bold small">Process</span>
+                <h2 class="display-5 fw-bold mt-2 mb-3">How It Works</h2>
+                <p class="text-muted mb-0">Booking with us is simple and straightforward</p>
+            </div>
+        </div>
+        <div class="row g-4">
+            <!-- Step 1: Find a Service -->
+            <div class="col-md-4">
+                <div class="card h-100 border-0 shadow-sm rounded-4 overflow-hidden hover-scale">
+                    <div class="card-body p-4 text-center">
+                        <!-- Icon representing the step -->
+                        <div class="icon-shape icon-lg bg-primary bg-gradient rounded-3 text-white mb-4">
+                            <i class="fas fa-search"></i>
+                        </div>
+                        <h3 class="h5">1. Find a Service</h3>
+                        <p class="mb-0 text-muted">Browse our wide selection of professional services and choose what you need.</p>
+                    </div>
+                </div>
+            </div>
+            <!-- Step 2: Book an Appointment -->
+            <div class="col-md-4">
+                <div class="card h-100 border-0 shadow-sm rounded-4 overflow-hidden hover-scale">
+                    <div class="card-body p-4 text-center">
+                        <!-- Icon representing the step -->
+                        <div class="icon-shape icon-lg bg-primary bg-gradient rounded-3 text-white mb-4">
+                            <i class="fas fa-calendar-check"></i>
+                        </div>
+                        <h3 class="h5">2. Book an Appointment</h3>
+                        <p class="mb-0 text-muted">Select your preferred date and time from the available slots.</p>
+                    </div>
+                </div>
+            </div>
+            <!-- Step 3: Enjoy Your Service -->
+            <div class="col-md-4">
+                <div class="card h-100 border-0 shadow-sm rounded-4 overflow-hidden hover-scale">
+                    <div class="card-body p-4 text-center">
+                        <!-- Icon representing the step -->
+                        <div class="icon-shape icon-lg bg-primary bg-gradient rounded-3 text-white mb-4">
+                            <i class="fas fa-check-circle"></i>
+                        </div>
+                        <h3 class="h5">3. Enjoy Your Service</h3>
+                        <p class="mb-0 text-muted">Get confirmation and reminders. Show up and enjoy your service!</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<div style="height: 40px; background-color: #f8f9fa;"></div>
+
+<!-- Service Price List Section -->
+<section class="py-8 bg-white">
+    <div class="container">
+        <!-- Section Header -->
+        <div class="row justify-content-center mb-6">
+            <div class="col-lg-8 text-center">
+                <!-- Section title and subtitle -->
+                <span class="text-uppercase text-primary fw-bold small">Our Services</span>
+                <h2 class="display-5 fw-bold mt-2 mb-3">Service Price List</h2>
+                <p class="text-muted mb-0">Transparent pricing for all our premium services</p>
+            </div>
+        </div>
+
+        <!-- Price List Table -->
+        <div class="row justify-content-center">
+            <div class="col-lg-10">
+                <div class="card border-0 shadow-sm">
+                    <div class="card-body p-0">
+                        <div class="table-responsive">
+                            <!-- Table for listing services -->
+                            <table class="table table-hover align-middle mb-0">
+                                <thead class="bg-light">
+                                    <tr>
+                                        <th class="ps-4 py-3 fw-bold">Service Name</th>
+                                        <th class="text-end pe-4 py-3 fw-bold">Duration</th>
+                                        <th class="text-end pe-4 py-3 fw-bold">Price</th>
+                                        <th class="text-end pe-4 py-3"></th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <!-- Loop through services and display them -->
+                                    {% for service in services %}
+                                    <tr class="border-top">
+                                        <td class="ps-4 py-3">
+                                            <div class="d-flex align-items-center">
+                                                <!-- Display service image or a default icon if none exists -->
+                                                {% if service.image %}
+                                                <img src="{{ service.image.url }}" class="rounded-circle me-3" width="40" height="40" alt="{{ service.name }}">
+                                                {% else %}
+                                                <div class="rounded-circle bg-light d-flex align-items-center justify-content-center me-3" style="width: 40px; height: 40px;">
+                                                    <i class="fas fa-spa text-muted"></i>
+                                                </div>
+                                                {% endif %}
+                                                <div>
+                                                    <!-- Display service name and category -->
+                                                    <h6 class="mb-0 fw-semibold">{{ service.name }}</h6>
+                                                    <small class="text-muted">{{ service.get_category_display }}</small>
+                                                </div>
+                                            </div>
+                                        </td>
+                                        <td class="text-end pe-4 py-3">
+                                            <!-- Display service duration -->
+                                            <span class="text-muted">{{ service.duration }} min</span>
+                                        </td>
+                                        <td class="text-end pe-4 py-3">
+                                            <!-- Display price of the service -->
+                                            <span class="fw-bold text-primary">{{ service.price }} UZS</span>
+                                        </td>
+                                        <td class="text-end pe-4 py-3">
+                                            <!-- Link to service details page -->
+                                            <a href="{% url 'service_detail' service.id %}" class="btn btn-sm btn-outline-primary">
+                                                Details <i class="fas fa-chevron-right ms-1 small"></i>
+                                            </a>
+                                        </td>
+                                    </tr>
+                                    {% endfor %}
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Call to Action Button -->
+        <div class="text-center mt-6">
+            <a href="{% url 'service_list' %}" class="btn btn-link text-primary px-0 fw-bold">
+                View complete service catalog <i class="fas fa-long-arrow-alt-right ms-2"></i>
+            </a>
+        </div>
+    </div>
+</section>
+
+<!-- Spacer (for visual break) -->
+<div style="height: 40px; background-color: #f8f9fa;"></div>
+
+<!-- Professional Masters Section -->
+<section class="py-7 bg-white">
+  <div class="container">
+    <!-- Section Header -->
+    <div class="row justify-content-center mb-6">
+      <div class="col-lg-8 text-center">
+        <h2 class="display-5 fw-bold mb-3">Our Specialists</h2>
+        <p class="text-muted">Professionals with verified qualifications and work experience</p>
+      </div>
+    </div>
+
+    <!-- Displaying the specialists (masters) -->
+    <div class="row g-4">
+      {% for master in top_masters %}
+      <div class="col-xl-3 col-lg-4 col-md-6">
+        <!-- Card for each specialist -->
+        <div class="card border-0 h-100 master-card shadow-sm hover-shadow-lg transition-all">
+          <div class="card-img-container position-relative overflow-hidden" style="height: 280px;">
+            <!-- Display specialist's image if available -->
+            {% if master.image %}
+              <img src="{{ master.image.url }}"
+                   class="img-fluid w-100 h-100 object-fit-cover object-position-top rounded-top-3"
+                   alt="{{ master.name }}"
+                   style="transform: scale(1.05); transition: transform 0.3s ease;">
+            {% else %}
+              <div class="h-100 w-100 bg-light d-flex align-items-center justify-content-center rounded-top-3">
+                <i class="fas fa-user-tie fa-4x text-muted"></i>
+              </div>
+            {% endif %}
+
+            <!-- Floating rating badge -->
+            <div class="position-absolute top-3 end-3">
+              <span class="badge bg-white text-dark fw-bold shadow-sm rounded-pill px-3 py-2">
+                {{ master.avg_rating|default:"-"|floatformat:1 }} ★
+              </span>
+            </div>
+
+            <!-- Gradient overlay for better readability -->
+            <div class="position-absolute bottom-0 start-0 w-100 h-50 bg-gradient-dark rounded-top-3"></div>
+
+            <!-- Specialist's service badge (if available) -->
+            <div class="position-absolute bottom-3 start-3">
+              <span class="badge bg-primary rounded-pill px-3 py-2 text-white">
+                {{ master.service.name|default:"Specialist" }}
+              </span>
+            </div>
+          </div>
+
+          <!-- Card content with specialist details -->
+          <div class="card-body px-4 py-4 text-center">
+            <!-- Specialist's name and role -->
+            <h3 class="h5 mb-2 fw-bold">{{ master.name }}</h3>
+            <p class="text-muted mb-3">{{ master.role }}</p>
+            <div class="d-flex justify-content-center border-top pt-3">
+              <!-- Display experience -->
+              <div class="text-center me-4">
+                <div class="icon-sm bg-light-primary rounded-circle d-inline-flex align-items-center justify-content-center mb-2">
+                  <i class="fas fa-briefcase text-primary"></i>
+                </div>
+                <small class="text-muted d-block">Experience</small>
+                <span class="fw-medium">
+                  {% if master.experience %}
+                    {{ master.experience|floatformat:"-1" }} years
+                  {% else %}
+                    —
+                  {% endif %}
+                </span>
+              </div>
+              <!-- Display appointment count -->
+              <div class="text-center">
+                <div class="icon-sm bg-light-primary rounded-circle d-inline-flex align-items-center justify-content-center mb-2">
+                  <i class="fas fa-calendar-check text-primary"></i>
+                </div>
+                <small class="text-muted d-block">Appointments</small>
+                <span class="fw-medium">{{ master.appointment_count|default:"—" }}</span>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      {% empty %}
+      <div class="col-12 text-center py-5">
+        <div class="alert alert-light border" role="alert">
+          <i class="fas fa-info-circle me-2"></i> No available specialists
+        </div>
+      </div>
+      {% endfor %}
+    </div>
+  </div>
+</section>
+
+
+<div style="height: 40px; background-color: #f8f9fa;"></div>
+
+{% if promotions %}
+<section class="py-8 bg-gradient-light" style="background: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%);">
+    <div class="container">
+        <div class="row justify-content-center mb-6">
+            <div class="col-lg-8 text-center">
+                <span class="badge bg-danger mb-3 px-3 py-2 rounded-pill">Limited Time Offers</span>
+                <h2 class="display-5 fw-bold mb-3">Exclusive Promotions & Discounts</h2>
+                <p class="lead text-muted">Special deals to enhance your experience with us</p>
+            </div>
+        </div>
+
+        <div class="row g-4">
+            {% for promo in promotions %}
+            <div class="col-md-6 col-lg-4">
+                <div class="card border-0 h-100 shadow-lg-hover" style="transition: all 0.3s ease; border-radius: 12px;">
+                    <div class="card-body p-4 position-relative">
+                        {% if promo.is_active %}
+                        <div class="position-absolute end-0 top-0 m-3">
+                            <span class="badge bg-danger py-2 px-3 rounded-pill pulse-animation">HOT</span>
+                        </div>
+                        {% endif %}
+
+                        <div class="d-flex align-items-center mb-3">
+                            <div class="bg-primary bg-opacity-10 p-3 rounded-circle me-3">
+                                <i class="fas fa-percentage text-primary fs-4"></i>
+                            </div>
+                            <h5 class="fw-bold mb-0">{{ promo.title }}</h5>
+                        </div>
+
+                        <p class="text-muted mb-3">{{ promo.description }}</p>
+
+                        <!-- Related Service -->
+                        {% if promo.service %}
+                        <div class="mb-3">
+                            <h6 class="fw-semibold mb-2">Applicable Service:</h6>
+                            <span class="badge bg-info bg-opacity-10 text-info border border-info border-opacity-10">
+                                {{ promo.service.name }}
+                            </span>
+                        </div>
+                        {% endif %}
+
+                        <div class="d-flex justify-content-between align-items-center bg-light p-3 rounded mb-3">
+                            <div>
+                                <span class="text-muted small">Discount</span>
+                                <h4 class="fw-bold text-danger mb-0">{{ promo.discount_percent }}% OFF</h4>
+                            </div>
+                            <div class="text-end">
+                                <span class="text-muted small">Valid until</span>
+                                <h6 class="fw-bold mb-0">{{ promo.end_date|date:"M d, Y" }}</h6>
+                            </div>
+                        </div>
+
+                        <a href="#book-now" class="btn btn-primary w-100 py-2 rounded-pill fw-medium">
+                            Claim Offer <i class="fas fa-arrow-right ms-2"></i>
+                        </a>
+                    </div>
+                </div>
+            </div>
+            {% endfor %}
+        </div>
+    </div>
+</section>
+{% endif %}
+
+<div style="height: 40px; background-color: #f8f9fa;"></div>
+
+<section class="position-relative py-10 overflow-hidden">
+  <!-- Decorative elements -->
+  <div class="position-absolute top-0 start-0 w-100 h-100 bg-light z-index-n1"></div>
+  <div class="position-absolute bottom-0 end-0 w-50 h-100 bg-gradient-primary opacity-05 z-index-n1"></div>
+
+  <div class="container position-relative">
+    <!-- Animated heading -->
+    <div class="row justify-content-center mb-8" data-aos="fade-up">
+      <div class="col-lg-8 text-center">
+        <span class="badge bg-primary-soft text-primary rounded-pill mb-3">Our Advantages</span>
+        <h2 class="display-5 fw-bold mb-3">Premium Booking Experience</h2>
+        <p class="lead text-muted">We've redefined service booking with cutting-edge technology and customer-first approach</p>
+      </div>
+    </div>
+
+    <!-- Interactive feature cards -->
+    <div class="row g-4 g-lg-6">
+      <div class="col-lg-4" data-aos="fade-up" data-aos-delay="100">
+        <div class="card card-hover h-100 border-0 shadow-sm rounded-4 overflow-hidden bg-white bg-opacity-75">
+          <div class="card-body p-5 text-center">
+            <div class="icon-box bg-primary-soft text-primary rounded-3 mb-4 mx-auto">
+              <i class="fas fa-clock fa-2x"></i>
+            </div>
+            <h3 class="h4 fw-bold mb-3">Time-Saving</h3>
+            <p class="text-muted mb-0">Our system books optimal time slots in seconds, eliminating waiting time.</p>
+            <div class="mt-4 pt-3 border-top">
+              <ul class="list-unstyled text-start text-muted small">
+                <li class="mb-2"><i class="fas fa-check-circle text-success me-2"></i> Instant confirmation</li>
+                <li class="mb-2"><i class="fas fa-check-circle text-success me-2"></i> 24/7 availability</li>
+                <li><i class="fas fa-check-circle text-success me-2"></i> Average 87% time saved</li>
+              </ul>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="col-lg-4" data-aos="fade-up" data-aos-delay="200">
+        <div class="card card-hover h-100 border-0 shadow-sm rounded-4 overflow-hidden bg-white bg-opacity-75">
+          <div class="card-body p-5 text-center">
+            <div class="icon-box bg-primary-soft text-primary rounded-3 mb-4 mx-auto">
+              <i class="fas fa-shield-alt fa-2x"></i>
+            </div>
+            <h3 class="h4 fw-bold mb-3">Bank-Level Security</h3>
+            <p class="text-muted mb-0">Enterprise-grade encryption and compliance with international data protection standards.</p>
+            <div class="mt-4 pt-3 border-top">
+              <ul class="list-unstyled text-start text-muted small">
+                <li class="mb-2"><i class="fas fa-check-circle text-success me-2"></i> GDPR compliant</li>
+                <li class="mb-2"><i class="fas fa-check-circle text-success me-2"></i> PCI DSS certified</li>
+                <li><i class="fas fa-check-circle text-success me-2"></i> 99.99% uptime</li>
+              </ul>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="col-lg-4" data-aos="fade-up" data-aos-delay="300">
+        <div class="card card-hover h-100 border-0 shadow-sm rounded-4 overflow-hidden bg-white bg-opacity-75">
+          <div class="card-body p-5 text-center">
+            <div class="icon-box bg-primary-soft text-primary rounded-3 mb-4 mx-auto">
+              <i class="fas fa-mobile-alt fa-2x"></i>
+            </div>
+            <h3 class="h4 fw-bold mb-3">Omnichannel Access</h3>
+            <p class="text-muted mb-0">Seamless experience across all devices with progressive web app technology.</p>
+            <div class="mt-4 pt-3 border-top">
+              <ul class="list-unstyled text-start text-muted small">
+                <li class="mb-2"><i class="fas fa-check-circle text-success me-2"></i> Native app experience</li>
+                <li class="mb-2"><i class="fas fa-check-circle text-success me-2"></i> Offline functionality</li>
+                <li><i class="fas fa-check-circle text-success me-2"></i> Cross-platform sync</li>
+              </ul>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+
+<script>
+  AOS.init({
+    duration: 800,
+    easing: 'ease-in-out',
+    once: true
+  });
+</script>
+
+{% endblock %}

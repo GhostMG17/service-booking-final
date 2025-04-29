@@ -1,0 +1,341 @@
+:root {
+  --primary-color: #4e73df;
+  --primary-hover: #3a5bc7;
+  --secondary-color: #f8f9fa;
+  --text-color: #2d3748;
+  --light-text: #718096;
+}
+
+.navbar {
+  background-color: white !important;
+  box-shadow: 0 2px 15px rgba(0,0,0,0.08);
+  padding: 0.8rem 0;
+}
+
+.navbar-brand {
+  font-weight: 700;
+  color: var(--primary-color) !important;
+  font-size: 1.5rem;
+  display: flex;
+  align-items: center;
+}
+
+.navbar-brand i {
+  font-size: 1.8rem;
+  margin-right: 0.5rem;
+}
+
+.nav-link {
+  color: var(--text-color) !important;
+  font-weight: 500;
+  padding: 0.5rem 1rem !important;
+  margin: 0 0.2rem;
+  border-radius: 6px;
+  transition: all 0.2s ease;
+}
+
+.nav-link:hover {
+  color: var(--primary-color) !important;
+  background: rgba(78, 115, 223, 0.05);
+}
+
+.nav-link.active {
+  color: white !important;
+  background: var(--primary-color);
+}
+
+.nav-link.active:hover {
+  background: var(--primary-hover);
+}
+
+footer {
+  background-color: #f8f9fa;
+  color: #212529;
+  padding: 3rem 0;
+  margin-top: 3rem;
+  border-top: 1px solid #dee2e6;
+}
+
+.footer-heading {
+  font-weight: 600;
+  margin-bottom: 1.5rem;
+  color: var(--primary-color);
+}
+
+.footer-link {
+  color: #6c757d;
+  text-decoration: none;
+  transition: all 0.3s;
+}
+
+.footer-link:hover {
+  color: var(--primary-color);
+  padding-left: 5px;
+}
+
+.social-icon {
+  width: 40px;
+  height: 40px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  background-color: #e9ecef;
+  border-radius: 50%;
+  margin-right: 10px;
+  transition: all 0.3s;
+}
+
+.social-icon:hover {
+  background-color: var(--primary-color);
+  color: white !important;
+}
+
+.back-to-top {
+  position: fixed;
+  bottom: 20px;
+  right: 20px;
+  display: none;
+  width: 50px;
+  height: 50px;
+  border-radius: 50%;
+  background-color: var(--primary-color);
+  color: white;
+  text-align: center;
+  line-height: 50px;
+  z-index: 99;
+  box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+}
+
+
+
+
+body {
+  font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;
+  color: var(--text-color);
+}
+
+
+.btn-booking {
+  background: linear-gradient(135deg, #4e73df 0%, #3a5bc7 100%);
+  border: none;
+  color: white;
+  font-weight: 600;
+  padding: 0.5rem 1.2rem;
+  border-radius: 6px;
+  box-shadow: 0 2px 10px rgba(78, 115, 223, 0.3);
+  transition: all 0.2s ease;
+}
+
+.btn-booking:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 4px 15px rgba(78, 115, 223, 0.4);
+  color: white;
+}
+
+.user-avatar {
+  width: 36px;
+  height: 36px;
+  border-radius: 50%;
+  object-fit: cover;
+  border: 2px solid var(--primary-color);
+}
+
+.dropdown-menu {
+  border: none;
+  box-shadow: 0 5px 20px rgba(0,0,0,0.1);
+  border-radius: 8px;
+  padding: 0.5rem;
+}
+
+.dropdown-item {
+  border-radius: 6px;
+  padding: 0.5rem 1rem;
+  font-weight: 500;
+}
+
+.dropdown-item:hover {
+  background: rgba(78, 115, 223, 0.1);
+  color: var(--primary-color);
+}
+
+.dropdown-divider {
+  margin: 0.3rem 0;
+}
+
+footer {
+  background-color: #f8f9fa;
+  color: var(--text-color);
+  padding: 3rem 0;
+  margin-top: 3rem;
+  border-top: 1px solid #e2e8f0;
+}
+
+.footer-heading {
+  font-weight: 700;
+  margin-bottom: 1.5rem;
+  color: var(--primary-color);
+  font-size: 1.1rem;
+}
+
+.footer-link {
+  color: var(--light-text);
+  text-decoration: none;
+  transition: all 0.2s;
+  display: inline-block;
+  margin-bottom: 0.8rem;
+}
+
+.footer-link:hover {
+  color: var(--primary-color);
+  transform: translateX(3px);
+}
+
+.social-icon {
+  width: 40px;
+  height: 40px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  background-color: #edf2f7;
+  border-radius: 50%;
+  margin-right: 10px;
+  transition: all 0.2s;
+  color: var(--light-text);
+}
+
+.social-icon:hover {
+  background-color: var(--primary-color);
+  color: white !important;
+  transform: translateY(-3px);
+}
+
+.back-to-top {
+  position: fixed;
+  bottom: 25px;
+  right: 25px;
+  display: none;
+  width: 50px;
+  height: 50px;
+  border-radius: 50%;
+  background: var(--primary-color);
+  color: white;
+  text-align: center;
+  line-height: 50px;
+  z-index: 99;
+  box-shadow: 0 2px 20px rgba(78, 115, 223, 0.3);
+  transition: all 0.2s;
+}
+
+.back-to-top:hover {
+  transform: translateY(-3px);
+  background: var(--primary-hover);
+}
+
+.avatar-container {
+position: relative;
+cursor: pointer;
+}
+
+.user-avatar {
+width: 40px;
+height: 40px;
+border-radius: 50%;
+object-fit: cover;
+transition: all 0.3s ease;
+}
+
+.default-avatar {
+display: flex;
+align-items: center;
+justify-content: center;
+background: linear-gradient(135deg, #4e73df 0%, #3a5bc7 100%);
+color: white;
+font-weight: bold;
+font-size: 1.1rem;
+}
+
+.avatar-pulse {
+position: absolute;
+top: -2px;
+left: -2px;
+right: -2px;
+bottom: -2px;
+border: 2px solid rgba(78, 115, 223, 0.4);
+border-radius: 50%;
+animation: pulse 2s infinite;
+pointer-events: none;
+opacity: 0;
+transition: opacity 0.3s;
+}
+
+.user-profile-trigger:hover .avatar-pulse {
+opacity: 1;
+}
+
+@keyframes pulse {
+0% { transform: scale(1); opacity: 1; }
+70% { transform: scale(1.3); opacity: 0; }
+100% { opacity: 0; }
+}
+
+.auth-buttons {
+display: flex;
+align-items: center;
+}
+
+.auth-btn {
+display: inline-flex;
+align-items: center;
+padding: 0.5rem 1.2rem;
+border-radius: 30px;
+font-weight: 600;
+text-decoration: none;
+transition: all 0.3s ease;
+position: relative;
+overflow: hidden;
+}
+
+.auth-btn i {
+margin-left: 8px;
+transition: transform 0.3s;
+}
+
+.auth-btn:hover i {
+transform: translateX(3px);
+}
+
+.login-btn {
+background: transparent;
+color: var(--primary-color);
+border: 2px solid var(--primary-color);
+}
+
+.login-btn:hover {
+background: rgba(78, 115, 223, 0.1);
+box-shadow: 0 4px 12px rgba(78, 115, 223, 0.15);
+}
+
+.register-btn {
+background: linear-gradient(135deg, #4e73df 0%, #3a5bc7 100%);
+color: white;
+box-shadow: 0 4px 15px rgba(78, 115, 223, 0.3);
+}
+
+.register-btn:hover {
+transform: translateY(-2px);
+box-shadow: 0 6px 20px rgba(78, 115, 223, 0.4);
+color: white;
+}
+
+.dropdown-header {
+background: rgba(78, 115, 223, 0.05);
+border-bottom: 1px solid rgba(78, 115, 223, 0.1);
+}
+
+.logout-btn {
+color: #dc3545;
+}
+
+.logout-btn:hover {
+background: rgba(220, 53, 69, 0.1) !important;
+}

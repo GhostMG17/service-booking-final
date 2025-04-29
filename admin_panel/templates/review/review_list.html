@@ -1,0 +1,110 @@
+{% extends "admin_base.html" %}
+{% load static %}
+{% block title %}Customer Reviews{% endblock %}
+
+{% block content %}
+<link rel="stylesheet" href="{% static 'admin_panel/review/review_list.css'%}">
+<div class="reviews-management-container">
+    <div class="reviews-header">
+        <div class="header-content">
+            <h2><i class="fas fa-star"></i> Customer Reviews</h2>
+            <p class="subtitle">Manage and monitor customer feedback</p>
+        </div>
+        <a href="{% url 'manage_users' %}" class="back-button">
+            <i class="fas fa-arrow-left"></i> Back to Admin Panel
+        </a>
+    </div>
+
+    <div class="reviews-stats">
+        <div class="stat-card">
+            <div class="stat-value">{{ reviews.count }}</div>
+            <div class="stat-label">Total Reviews</div>
+        </div>
+        <div class="stat-card">
+            <div class="stat-value">{{ avg_rating|default:"0.0" }} <i class="fas fa-star"></i></div>
+            <div class="stat-label">Average Rating</div>
+        </div>
+        <div class="stat-card">
+            <div class="stat-value">{{ latest_review_date|date:"M d, Y"|default:"-" }}</div>
+            <div class="stat-label">Last Review</div>
+        </div>
+    </div>
+
+    <div class="reviews-table-container">
+        <table class="reviews-table">
+            <thead>
+                <tr>
+                    <th>ID</th>
+                    <th>User</th>
+                    <th>Service</th>
+                    <th>Master</th>
+                    <th>Rating</th>
+                    <th>Comment</th>
+                    <th>Date</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for review in reviews %}
+                <tr>
+                    <td class="review-id">#{{ review.id }}</td>
+                    <td class="user-info">
+                        <div class="user-avatar">
+                            <i class="fas fa-user"></i>
+                        </div>
+                        <div class="user-details">
+                            <span class="username">{{ review.user.username }}</span>
+                            <span class="user-email">{{ review.user.email }}</span>
+                        </div>
+                    </td>
+                    <td class="service-name">{{ review.service.name }}</td>
+                    <td class="master-name">{{ review.master.name }}</td>
+                    <td class="rating">
+                        <div class="stars" data-rating="{{ review.rating }}">
+                            {% for i in "12345" %}
+                                <i class="fas fa-star{% if forloop.counter > review.rating %} star-empty{% endif %}"></i>
+                            {% endfor %}
+                        </div>
+                        <span class="rating-value">{{ review.rating }}</span>
+                    </td>
+                    <td class="comment">
+                        <div class="comment-content">
+                            {{ review.comment|default:"No comment"|truncatechars:100 }}
+                        </div>
+                        {% if review.comment|length > 100 %}
+                        <button class="view-more">View full</button>
+                        {% endif %}
+                    </td>
+                    <td class="review-date">
+                        <div class="date">{{ review.created_at|date:"M d, Y" }}</div>
+                        <div class="time">{{ review.created_at|time:"H:i" }}</div>
+                    </td>
+                </tr>
+                {% empty %}
+                <tr>
+                    <td colspan="7" class="no-reviews">
+                        <i class="fas fa-comment-slash"></i>
+                        <span>No reviews yet</span>
+                    </td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+</div>
+
+
+
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    // View full comment functionality
+    document.querySelectorAll('.view-more').forEach(button => {
+        button.addEventListener('click', function() {
+            const commentContent = this.previousElementSibling;
+            commentContent.style.whiteSpace = commentContent.style.whiteSpace === 'normal' ? 'nowrap' : 'normal';
+            commentContent.style.overflow = commentContent.style.overflow === 'visible' ? 'hidden' : 'visible';
+            this.textContent = commentContent.style.whiteSpace === 'normal' ? 'View less' : 'View full';
+        });
+    });
+});
+</script>
+{% endblock %}

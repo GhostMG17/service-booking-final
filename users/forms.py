@@ -1,53 +1,62 @@
-import re
+from django.utils import timezone
 from django.contrib.auth import get_user_model
 from django.contrib.auth.forms import UserCreationForm
 from django.core.exceptions import ValidationError
+from .models import Service, Profile, Review, Promotion, CustomUser, Booking
 from django import forms
-from .models import Service, Profile, Review
-from .models import CustomUser, Booking
 
-
+# --- Custom user creation form inheriting from Django's built-in UserCreationForm ---
 class CustomUserCreationForm(UserCreationForm):
     class Meta:
-        model = CustomUser
-        fields = ('username', 'email', 'phone_number')
+        model = CustomUser  # Using the custom user model
+        fields = ('full_name', 'username', 'email', 'phone_number')  # Fields to include in the form
 
-        def __init__(self, *args, **kwargs):
-            super().__init__(*args, **kwargs)
-            self.fields['username'].widget.attrs.update({'class': 'form-control'})
-            self.fields['email'].widget.attrs.update({'class': 'form-control'})
-            self.fields['password1'].widget.attrs.update({'class': 'form-control'})
-            self.fields['password2'].widget.attrs.update({'class': 'form-control'})
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        # Adding Bootstrap classes to form fields for better UI styling
+        self.fields['username'].widget.attrs.update({'class': 'form-control'})
+        self.fields['email'].widget.attrs.update({'class': 'form-control'})
+        self.fields['phone_number'].widget.attrs.update({'class': 'form-control'})
+        self.fields['password1'].widget.attrs.update({'class': 'form-control'})
+        self.fields['password2'].widget.attrs.update({'class': 'form-control'})
+        self.fields['full_name'].widget.attrs.update({'class': 'form-control'})
 
-        # Валидация email
-        def clean_email(self):
-            email = self.cleaned_data.get('email')
-            if CustomUser.objects.filter(email=email).exists():
-                raise ValidationError("Этот email уже используется. Пожалуйста, выберите другой.")
-            return email
+    # Email field validation to prevent duplicate emails
+    def clean_email(self):
+        email = self.cleaned_data.get('email')
+        if CustomUser.objects.filter(email=email).exists():
+            raise ValidationError("This email address is already in use. Please choose another one.")
+        return email
 
-        def clean_phone_number(self):
-            phone_number = self.cleaned_data.get('phone_number')
-            if CustomUser.objects.filter(phone_number=phone_number).exists():
-                raise ValidationError('Этот номер телефона уже зарегистрирован.')
-            return phone_number
+    # Phone number field validation to prevent duplicate phone numbers
+    def clean_phone_number(self):
+        phone_number = self.cleaned_data.get('phone_number')
+        if CustomUser.objects.filter(phone_number=phone_number).exists():
+            raise ValidationError('This phone number is already registered. Please choose another one.')
+        return phone_number
 
+
+# Reference to the custom user model
 User = get_user_model()
+
+# --- Form to update the user's profile (username only) ---
 class ProfileForm(forms.ModelForm):
     username = forms.CharField(max_length=150, required=True, label="Username")
 
     class Meta:
         model = Profile
-        fields = ['username']
+        fields = ['username']  # Only allows updating the username
 
     def __init__(self, *args, **kwargs):
         user = kwargs.pop('user', None)
         super().__init__(*args, **kwargs)
+        # Pre-filling the username field with the current username
         if user:
             self.fields['username'].initial = user.username
 
     def save(self, commit=True):
         profile = super().save(commit=False)
+        # Save the new username in the related user object
         user = profile.user
         user.username = self.cleaned_data['username']
         if commit:
@@ -56,29 +65,32 @@ class ProfileForm(forms.ModelForm):
         return profile
 
 
+# --- Simple form to update just the username ---
 class UserUpdateForm(forms.ModelForm):
     class Meta:
         model = CustomUser
         fields = ['username']
 
 
+# --- Form to update profile details like full name, birthdate, etc. ---
 class ProfileUpdateForm(forms.ModelForm):
     class Meta:
         model = Profile
         fields = ['full_name', 'date_of_birth', 'address', 'bio']
         widgets = {
-            'date_of_birth': forms.DateInput(attrs={'type': 'date'}),
-            'bio': forms.Textarea(attrs={'rows': 3}),
+            'date_of_birth': forms.DateInput(attrs={'type': 'date'}),  # Date picker input
+            'bio': forms.Textarea(attrs={'rows': 3}),  # Text area for bio
         }
 
 
+# --- Booking form to allow users to choose a service and date ---
 class BookingForm(forms.ModelForm):
     class Meta:
         model = Booking
         fields = ['service', 'booking_date']
 
+    # Custom validation to check if the selected time slot is already booked
     def clean_booking_date(self):
-        """ check if slot is avalibale"""
         service = self.cleaned_data.get('service')
         booking_date = self.cleaned_data.get('booking_date')
 
@@ -88,6 +100,7 @@ class BookingForm(forms.ModelForm):
         return booking_date
 
 
+# --- Service filter form for searching or filtering services ---
 class ServiceFilterForm(forms.Form):
     CATEGORY_CHOICES = Service.CATEGORY_CHOICES
     category = forms.ChoiceField(choices=[('', 'All categories')] + CATEGORY_CHOICES, required=False)
@@ -103,30 +116,40 @@ class ServiceFilterForm(forms.Form):
     ], required=False)
 
 
-class CustomUserCreationForm(UserCreationForm):
-    phone_number = forms.CharField(max_length=15, required=True)
-
-    class Meta:
-        model = CustomUser
-        fields = ['username', 'email', 'phone_number', 'password1', 'password2']
-
-    def clean_phone_number(self):
-        phone_number = self.cleaned_data.get('phone_number')
-
-        # Phone validation
-        pattern = re.compile(r'^\+998\d{9}$')  # E.g for Uzb
-        if not pattern.match(phone_number):
-            raise forms.ValidationError('Incorrect phone format. Please use format: +998xxxxxxxxx')
-
-        return phone_number
-
-
+# --- Form for submitting a review with rating and comment ---
 class ReviewForm(forms.ModelForm):
     class Meta:
         model = Review
         fields = ["rating", "comment"]
         widgets = {
-            "rating": forms.Select(choices=[(i, f"{i}⭐") for i in range(1, 6)]),
+            "rating": forms.Select(choices=[(i, f"{i}⭐") for i in range(1, 6)]),  # Dropdown for star rating
             "comment": forms.Textarea(attrs={"rows": 3, "placeholder": "Leave a feedback..."}),
         }
 
+
+# --- Form for creating or editing promotions ---
+class PromotionForm(forms.ModelForm):
+    class Meta:
+        model = Promotion
+        fields = '__all__'  # Include all fields from the Promotion model
+        widgets = {
+            'start_date': forms.DateInput(attrs={'type': 'date'}),
+            'end_date': forms.DateInput(attrs={'type': 'date'}),
+            'description': forms.Textarea(attrs={'rows': 3}),
+        }
+
+    # Additional validation logic for promotion dates
+    def clean(self):
+        cleaned_data = super().clean()
+        start_date = cleaned_data.get('start_date')
+        end_date = cleaned_data.get('end_date')
+
+        # Ensure start date is before end date
+        if start_date and end_date and start_date > end_date:
+            raise ValidationError("End date must be after start date")
+
+        # Ensure end date is not in the past
+        if end_date and end_date < timezone.now().date():
+            raise ValidationError("End date cannot be in the past")
+
+        return cleaned_data

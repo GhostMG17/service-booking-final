@@ -1,0 +1,105 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block content %}
+<title>Update Username | Beauty Salon</title>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+<link rel="stylesheet" href="{% static 'css/profile/update_profile.css' %}">
+
+<div class="username-update-container">
+    <div class="username-update-card">
+        <div class="card-header">
+            <h2><i class="fas fa-user-edit"></i> Change Username</h2>
+            <p>Enter your new username below</p>
+        </div>
+
+        <form method="post" action="{% url 'update_profile' %}" class="username-update-form">
+            {% csrf_token %}
+
+            <div class="form-group">
+                <label for="id_username">New Username</label>
+                <div class="input-with-icon">
+                    <i class="fas fa-user"></i>
+                    <input
+                        type="text"
+                        name="username"
+                        id="id_username"
+                        value="{{ form.username.value|default:user.username }}"
+                        required
+                        class="form-control"
+                    >
+                </div>
+                {% if form.username.errors %}
+                    <div class="error-message">
+                        {{ form.username.errors }}
+                    </div>
+                {% endif %}
+            </div>
+
+            <div class="form-actions">
+                <button type="submit" class="btn-save">
+                    <i class="fas fa-save"></i> Update Username
+                </button>
+                <a href="{% url 'profile' %}" class="btn-cancel">
+                    <i class="fas fa-times"></i> Cancel
+                </a>
+            </div>
+        </form>
+    </div>
+</div>
+
+
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+
+<script>
+    $(document).ready(function() {
+    // Обработка отправки формы
+    $('.username-update-form').on('submit', function(e) {
+        e.preventDefault();
+
+        $.ajax({
+            type: 'POST',
+            url: $(this).attr('action'),
+            data: $(this).serialize(),
+            success: function(response) {
+                if(response.success) {
+                    Swal.fire({
+                        icon: 'success',
+                        title: 'Success!',
+                        text: 'Your username has been updated successfully.',
+                        confirmButtonColor: '#6c5ce7',
+                    }).then((result) => {
+                        // Перенаправление на страницу профиля
+                        window.location.href = "{% url 'profile' %}";
+                    });
+                } else {
+                    Swal.fire({
+                        icon: 'error',
+                        title: 'Error',
+                        html: response.errors.join('<br>'),
+                        confirmButtonColor: '#d63031',
+                    });
+                }
+            },
+            error: function(xhr) {
+                Swal.fire({
+                    icon: 'error',
+                    title: 'Error',
+                    text: xhr.responseJSON?.error || 'Failed to update username',
+                    confirmButtonColor: '#d63031',
+                });
+            }
+            success: function(response) {
+                if(response.success) {
+                    window.location.href = "{% url 'profile' %}";
+                } else {
+                    // обработка ошибок
+                }
+            }
+        });
+    });
+});
+</script>
+
+{% endblock %}

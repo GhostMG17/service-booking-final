@@ -11,7 +11,7 @@ https://docs.djangoproject.com/en/5.0/ref/settings/
 """
 
 from pathlib import Path
-from telnetlib import LOGOUT
+
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
@@ -22,11 +22,11 @@ STATICFILES_DIRS = [
     BASE_DIR / 'users/static',  # Оставляем users/static
 ]
 
-
-MEDIA_URL = '/services/'
-MEDIA_ROOT = BASE_DIR / 'services'
+MEDIA_URL = '/media/'
+MEDIA_ROOT = BASE_DIR / 'media'
 
 LOGIN_URL = '/login/'
+
 
 # Quick-start development settings - unsuitable for production
 # See https://docs.djangoproject.com/en/5.0/howto/deployment/checklist/
@@ -68,10 +68,12 @@ MIDDLEWARE = [
 
 ROOT_URLCONF = "service_booking.urls"
 
+import os
+
 TEMPLATES = [
     {
         "BACKEND": "django.template.backends.django.DjangoTemplates",
-        "DIRS": [BASE_DIR / 'users/templates'],
+        "DIRS": [os.path.join(BASE_DIR, 'users/templates')],  # Пустой список
         "APP_DIRS": True,
         "OPTIONS": {
             "context_processors": [
@@ -83,6 +85,7 @@ TEMPLATES = [
         },
     },
 ]
+
 
 WSGI_APPLICATION = "service_booking.wsgi.application"
 
@@ -149,3 +152,5 @@ EMAIL_USE_TLS = True
 EMAIL_HOST_USER = os.getenv('EMAIL_HOST_USER')  # Получаем значение из .env
 EMAIL_HOST_PASSWORD = os.getenv('EMAIL_HOST_PASSWORD')  # Получаем пароль
 DEFAULT_FROM_EMAIL = os.getenv('EMAIL_HOST_USER')
+
+

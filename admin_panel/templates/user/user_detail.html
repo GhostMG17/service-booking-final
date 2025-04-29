@@ -1,0 +1,88 @@
+{% extends "admin_base.html" %}
+{% load static %}
+{% block title %}User Profile - {{ user.username }}{% endblock %}
+
+{% block content %}
+<link rel="stylesheet" href="{% static 'admin_panel/manage_users/user_detail.css'%}">
+
+<div class="user-profile-container">
+    <div class="profile-header">
+        <a href="{% url 'manage_users' %}" class="back-button">
+            <i class="fas fa-arrow-left"></i> Back to Users
+        </a>
+        <h1><i class="fas fa-user"></i> User Profile</h1>
+    </div>
+
+    <div class="profile-content">
+        <div class="user-card">
+            <div class="user-avatar">
+                <i class="fas fa-user-circle"></i>
+            </div>
+            <div class="user-details">
+                <h2>{{ user.username }}</h2>
+                <div class="detail-item">
+                    <i class="fas fa-envelope"></i>
+                    <span>{{ user.email }}</span>
+                </div>
+                <div class="detail-item">
+                    <i class="fas fa-user-tag"></i>
+                    <span>{% if user.is_owner %}Owner{% else %}Standard User{% endif %}</span>
+                </div>
+                <div class="detail-item">
+                    <i class="fas fa-calendar-alt"></i>
+                    <span>Joined {{ user.date_joined|date:"M d, Y" }}</span>
+                </div>
+            </div>
+        </div>
+
+        <div class="booking-history-section">
+            <div class="section-header">
+                <h3><i class="fas fa-calendar-check"></i> Booking History</h3>
+                <span class="badge">{{ bookings.count }} total</span>
+            </div>
+
+            {% if bookings %}
+            <div class="bookings-table-container">
+                <table class="bookings-table">
+                    <thead>
+                        <tr>
+                            <th>Booking ID</th>
+                            <th>Date & Time</th>
+                            <th>Status</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for booking in bookings %}
+                        <tr>
+                            <td class="booking-id">#{{ booking.id }}</td>
+                            <td class="booking-time">
+                                <div class="booking-date">{{ booking.booking_date|date:"M d, Y" }}</div>
+                                <div class="booking-hour">{{ booking.booking_time|time:"H:i" }}</div>
+                            </td>
+                            <td>
+                                <span class="status-badge {{ booking.status }}">
+                                    <i class="status-icon
+                                        {% if booking.status == 'pending' %}fas fa-clock
+                                        {% elif booking.status == 'confirmed' %}fas fa-check-circle
+                                        {% elif booking.status == 'completed' %}fas fa-calendar-check
+                                        {% else %}fas fa-times-circle{% endif %}"></i>
+                                    {{ booking.get_status_display }}
+                                </span>
+                            </td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+            {% else %}
+            <div class="empty-state">
+                <i class="fas fa-calendar-times"></i>
+                <p>No bookings found</p>
+            </div>
+            {% endif %}
+        </div>
+    </div>
+</div>
+
+
+{% endblock %}

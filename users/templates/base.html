@@ -1,0 +1,210 @@
+{% load static %}
+
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>{% block title %}Booking Service{% endblock %}</title>
+
+  <!-- Bootstrap 5 -->
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css" rel="stylesheet">
+  <!-- Font Awesome -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  <!-- Анимации -->
+  <link href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css" rel="stylesheet">
+  <!-- Кастомные стили -->
+  <link rel="stylesheet" href="{% static 'css/user_styles.css' %}">
+
+</head>
+
+<body class="d-flex flex-column min-vh-100">
+  <!-- Improved Navbar -->
+  <nav class="navbar navbar-expand-lg navbar-light sticky-top">
+    <div class="container">
+      <!-- Logo -->
+      <a class="navbar-brand" href="{% url 'home' %}">
+        <i class="fas fa-calendar-check"></i>
+        <span class="ms-2">Service Booking</span>
+      </a>
+
+      <!-- Mobile Toggle -->
+      <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarContent">
+        <span class="navbar-toggler-icon"></span>
+      </button>
+
+      <!-- Main Menu -->
+      <div class="collapse navbar-collapse" id="navbarContent">
+        <ul class="navbar-nav me-auto mb-2 mb-lg-0">
+          <li class="nav-item">
+            <a class="nav-link" href="{% url 'home' %}">Home</a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link" href="{% url 'service_list' %}">Services</a>
+          </li>
+
+          <li class="nav-item">
+            <a class="nav-link" href="{% url 'masters' %}">Masters</a>
+          </li>
+
+          <li class="nav-item">
+            <a class="nav-link" href="{% url 'salons' %}">Salons</a>
+          </li>
+
+          <li class="nav-item">
+            <a class="nav-link" href="{% url 'booking_page' %}">Make a Booking</a>
+          </li>
+
+        </ul>
+
+
+          <!-- Auth Section -->
+        <div class="d-flex align-items-center">
+          {% if user.is_authenticated %}
+          <div class="dropdown ms-3">
+            <a class="user-profile-trigger" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+              <div class="avatar-container">
+                {% if user.profile.avatar %}
+                  <img src="{{ user.profile.avatar.url }}" class="user-avatar">
+                  <div class="avatar-pulse"></div>
+                {% else %}
+                  <div class="user-avatar default-avatar">
+                    {{ user.first_name|first|default:user.username|first|upper }}
+                  </div>
+                  <div class="avatar-pulse"></div>
+                {% endif %}
+              </div>
+            </a>
+            <ul class="dropdown-menu dropdown-menu-end shadow-lg">
+              <li>
+                <div class="dropdown-header px-4 py-3">
+                  <div class="d-flex align-items-center">
+                    {% if user.profile.avatar %}
+                      <img src="{{ user.profile.avatar.url }}" class="user-avatar me-3">
+                    {% else %}
+                      <div class="user-avatar default-avatar me-3">
+                        {{ user.first_name|first|default:user.username|first|upper }}
+                      </div>
+                    {% endif %}
+                    <div>
+                      <h6 class="mb-0">{{ user.get_full_name|default:user.username }}</h6>
+                      <small class="text-muted">{{ user.email }}</small>
+                    </div>
+                  </div>
+                </div>
+              </li>
+              <li><hr class="dropdown-divider mx-3"></li>
+              <li><a class="dropdown-item" href="{% url 'profile' %}">
+                <i class="fas fa-user-circle me-2"></i>My Profile
+              </a></li>
+
+              <li><hr class="dropdown-divider mx-3"></li>
+              <li>
+                <form method="POST" action="{% url 'logout' %}">
+                  {% csrf_token %}
+                  <button type="submit" class="dropdown-item logout-btn">
+                    <i class="fas fa-sign-out-alt me-2"></i>Sign Out
+                  </button>
+                </form>
+              </li>
+            </ul>
+          </div>
+          {% else %}
+          <div class="auth-buttons">
+            <a href="{% url 'login' %}" class="auth-btn login-btn">
+              <span class="auth-btn-text">Sign In</span>
+              <i class="fas fa-arrow-right-to-bracket"></i>
+            </a>
+            <a href="{% url 'register' %}" class="auth-btn register-btn ms-3">
+              <span class="auth-btn-text">Join Us</span>
+              <i class="fas fa-user-plus"></i>
+            </a>
+          </div>
+          {% endif %}
+        </div>
+      </div>
+    </div>
+  </nav>
+
+  <!-- Main Content -->
+  <main class="flex-grow-1">
+    {% block content %}{% endblock %}
+  </main>
+
+  <!-- Footer -->
+  <footer class="bg-light">
+    <div class="container py-5">
+      <div class="row g-4">
+        <!-- About -->
+        <div class="col-lg-4">
+          <h5 class="footer-heading">Service Booking</h5>
+          <p>The easiest way to book services online. Save your time with our convenient booking system.</p>
+          <div class="mt-4">
+            <a href="#" class="social-icon"><i class="fab fa-facebook-f"></i></a>
+            <a href="#" class="social-icon"><i class="fab fa-instagram"></i></a>
+            <a href="#" class="social-icon"><i class="fab fa-twitter"></i></a>
+            <a href="#" class="social-icon"><i class="fab fa-linkedin-in"></i></a>
+          </div>
+        </div>
+
+        <!-- Links -->
+        <div class="col-lg-2 col-md-6">
+          <h5 class="footer-heading">Quick Links</h5>
+          <ul class="list-unstyled">
+            <li><a href="{% url 'home' %}" class="footer-link">Home</a></li>
+            <li><a href="{% url 'service_list' %}" class="footer-link">Services</a></li>
+            <li><a href="{% url 'booking_page' %}" class="footer-link">Make Booking</a></li>
+            <li><a href="#" class="footer-link">FAQ</a></li>
+          </ul>
+        </div>
+
+        <!-- Contacts -->
+        <div class="col-lg-3 col-md-6">
+          <h5 class="footer-heading">Contact Us</h5>
+          <ul class="list-unstyled">
+            <li class="mb-2"><i class="fas fa-map-marker-alt me-2"></i> 123 Main St, New York, NY</li>
+            <li class="mb-2"><i class="fas fa-phone me-2"></i> +1 (234) 567-8900</li>
+            <li class="mb-2"><i class="fas fa-envelope me-2"></i> info@servicebooking.com</li>
+          </ul>
+        </div>
+
+        <!-- Newsletter -->
+        <div class="col-lg-3 col-md-6">
+          <h5 class="footer-heading">Newsletter</h5>
+          <p>Subscribe to get special offers and updates</p>
+          <form class="mb-3">
+            <div class="input-group">
+              <input type="email" class="form-control" placeholder="Your email">
+              <button class="btn btn-primary" type="submit"><i class="fas fa-paper-plane"></i></button>
+            </div>
+          </form>
+        </div>
+      </div>
+
+      <!-- Copyright -->
+      <div class="text-center pt-4 mt-4 border-top">
+        <p class="mb-0">&copy; 2025 Service Booking. All rights reserved.</p>
+      </div>
+    </div>
+  </footer>
+
+  <!-- Back to Top Button -->
+  <a href="#" class="back-to-top"><i class="fas fa-arrow-up"></i></a>
+
+  <!-- Scripts -->
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js"></script>
+
+
+  <script>
+    // Back to Top Button
+    window.addEventListener('scroll', function() {
+      var backToTop = document.querySelector('.back-to-top');
+      if (window.pageYOffset > 300) {
+        backToTop.style.display = 'block';
+      } else {
+        backToTop.style.display = 'none';
+      }
+    });
+  </script>
+{% block extra_scripts %}{% endblock %}
+</body>
+</html>

@@ -1,0 +1,140 @@
+{% extends 'base.html' %}  <!-- Extending the base template to use the common layout -->
+{% load static %}  <!-- Load static files for proper use of CSS, JS, etc. -->
+
+{% block content %} <!-- Start the content block where the page-specific content goes -->
+
+<!-- Link to external stylesheets for Leaflet (map), Font Awesome (icons), and the custom salon CSS -->
+<link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" />
+<link rel="stylesheet" href="{% static 'css/salon/salon_detail.css' %}" /> <!-- Custom CSS for the salon details page -->
+
+<div class="salon-container"> <!-- Main container for the salon page -->
+
+    <!-- Hero Section -->
+    <div class="salon-hero" style="background-image: linear-gradient(rgba(0,0,0,0.5), rgba(0,0,0,0.5)), url('{% static 'images/salon-bg.jpg' %}');">
+        <div class="hero-content">
+            <h1 class="salon-title">{{ salon.name }}</h1> <!-- Display salon name dynamically -->
+            <div class="salon-rating">
+                <span class="stars">★★★★★</span> <!-- Placeholder for rating (can be dynamic) -->
+                <span class="review-count">(142 reviews)</span> <!-- Placeholder for review count -->
+            </div>
+        </div>
+    </div>
+
+    <!-- Main Content -->
+    <div class="salon-main">
+        <!-- Salon Info Section -->
+        <div class="salon-info">
+            <div class="info-card">
+                <div class="info-icon">
+                    <i class="fas fa-map-marker-alt"></i> <!-- Icon for address -->
+                </div>
+                <div class="info-content">
+                    <h3>Address</h3> <!-- Section header -->
+                    <p>{{ salon.location }}</p> <!-- Display salon location dynamically -->
+                </div>
+            </div>
+
+            <div class="info-card">
+                <div class="info-icon">
+                    <i class="fas fa-clock"></i> <!-- Icon for working hours -->
+                </div>
+                <div class="info-content">
+                    <h3>Working Hours</h3>
+                    <p>Mon-Fri: 9:00 AM - 8:00 PM</p> <!-- Fixed working hours -->
+                    <p>Sat-Sun: 10:00 AM - 6:00 PM</p> <!-- Fixed working hours -->
+                </div>
+            </div>
+
+            <div class="info-card">
+                <div class="info-icon">
+                    <i class="fas fa-phone-alt"></i> <!-- Icon for contact info -->
+                </div>
+                <div class="info-content">
+                    <h3>Contacts</h3>
+                    <p><a href="mailto:{{ salon.contact_email }}">{{ salon.contact_email }}</a></p> <!-- Dynamic email link -->
+                    <p>+1 (XXX) XXX-XXXX</p> <!-- Placeholder phone number -->
+                </div>
+            </div>
+        </div>
+
+        <!-- Salon Map Section -->
+        <div class="salon-map-container">
+            <h2 class="section-title">Our Location</h2> <!-- Section title for the map -->
+            <div id="map" class="salon-map"></div> <!-- Container for the map -->
+            <div class="map-actions">
+                <a href="https://maps.google.com/?q={{ salon.latitude }},{{ salon.longitude }}" target="_blank" class="btn btn-map">
+                    <i class="fas fa-directions"></i> Get Directions <!-- Button to open Google Maps with salon location -->
+                </a>
+            </div>
+        </div>
+
+    </div>
+
+    <!-- Call-to-Action Section -->
+    <div class="salon-cta">
+        <h2>Ready to book an appointment?</h2> <!-- Heading for the call to action -->
+        <p>Choose your service and preferred time now</p> <!-- Text encouraging users to book -->
+        <a href="{% url 'booking_page' %}" class="btn btn-primary">Book Online</a> <!-- Link to booking page -->
+    </div>
+</div>
+
+
+
+<script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+
+
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+    // Check if map container exists
+    if (document.getElementById('map')) {
+        // Initialize map with proper coordinates
+        const map = L.map('map').setView([{{ salon.latitude }}, {{ salon.longitude }}], 15);
+
+        // Add tile layer with error handling
+        L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+            attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors',
+            maxZoom: 19,
+        }).addTo(map);
+
+        // Custom icon
+        const salonIcon = L.divIcon({
+            className: 'salon-marker',
+            html: '<i class="fas fa-spa"></i>',
+            iconSize: [40, 40],
+            iconAnchor: [20, 40]
+        });
+
+        // Add marker with error handling
+        try {
+            L.marker([{{ salon.latitude }}, {{ salon.longitude }}], {
+                icon: salonIcon
+            }).addTo(map)
+            .bindPopup(`
+                <div class="map-popup">
+                    <h3>${escapeHtml("{{ salon.name }}")}</h3>
+                    <p>${escapeHtml("{{ salon.location }}")}</p>
+                </div>
+            `)
+            .openPopup();
+        } catch (e) {
+            console.error("Error adding marker:", e);
+        }
+
+        // Helper function to escape HTML
+        function escapeHtml(str) {
+            if (!str) return '';
+            return str.toString()
+                .replace(/&/g, '&amp;')
+                .replace(/</g, '&lt;')
+                .replace(/>/g, '&gt;')
+                .replace(/"/g, '&quot;')
+                .replace(/'/g, '&#039;');
+        }
+    } else {
+        console.error("Map container not found");
+    }
+});
+</script>
+
+{% endblock %}

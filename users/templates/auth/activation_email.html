@@ -1,0 +1,39 @@
+{% load static %}
+<html>
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Account activation</title>
+    <link rel="stylesheet" href="{% static 'css/register/activation.css'%}">
+</head>
+<body>
+    <div class="header">
+        <!-- Замените src на URL вашего логотипа -->
+        <img src="https://example.com/logo.png" alt="Логотип компании" class="logo">
+        <h2>Добро пожаловать!</h2>
+    </div>
+
+    <div class="content">
+        <p>Здравствуйте, <span class="username">{{ user.username }}</span>!</p>
+        
+        <p>Благодарим вас за регистрацию на нашем сайте. Для завершения процесса регистрации и активации вашего аккаунта, пожалуйста, нажмите на кнопку ниже:</p>
+        
+        <p style="text-align: center;">
+            <a href="{{ activation_url }}" class="button">Активировать аккаунт</a>
+        </p>
+        
+        <p>Если кнопка не работает, скопируйте и вставьте следующую ссылку в адресную строку браузера:</p>
+        <p style="word-break: break-all; font-size: 12px; color: #555;">{{ activation_url }}</p>
+        
+        <p><em>Если вы не регистрировались на нашем сайте, пожалуйста, проигнорируйте это письмо.</em></p>
+    </div>
+
+    <div class="footer">
+        <p>© 2025 Service Booking. Все права защищены.</p>
+        <p>
+            <a href="https://example.com/privacy" style="color: #777; text-decoration: none;">Политика конфиденциальности</a> | 
+            <a href="https://example.com/contact" style="color: #777; text-decoration: none;">Контакты</a>
+        </p>
+    </div>
+</body>
+</html>

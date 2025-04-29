@@ -1,0 +1,33 @@
+.avatar {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.avatar-initial {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 36px;
+    height: 36px;
+    font-size: 14px;
+    font-weight: 600;
+    color: white;
+}
+
+.role-select {
+    width: 100px;
+    transition: all 0.3s;
+}
+
+.role-select:focus {
+    width: 120px;
+}
+
+.table-hover tbody tr:hover {
+    background-color: rgba(78, 115, 223, 0.05);
+}
+
+.status-form, .role-form {
+    display: inline-block;
+}

@@ -1,0 +1,122 @@
+{% extends "admin_base.html" %}
+
+{% block title %}Booking Management{% endblock %}
+
+{% block content %}
+<link rel="stylesheet" href="/static/admin_panel/manage_bookings/manage_bookings.css">
+
+<div class="booking-management-container">
+    <div class="booking-header">
+        <h2><i class="fas fa-calendar-alt"></i> Booking Management</h2>
+
+        <!-- Filter by status -->
+        <form method="GET" class="status-filter">
+            <div class="filter-group">
+                <label for="status">Filter by status:</label>
+                <div class="select-wrapper">
+                    <select name="status" id="status" onchange="this.form.submit()">
+                        <option value="">All Bookings</option>
+                        <option value="pending" {% if request.GET.status == "pending" %}selected{% endif %}>Pending</option>
+                        <option value="confirmed" {% if request.GET.status == "confirmed" %}selected{% endif %}>Confirmed</option>
+                        <option value="completed" {% if request.GET.status == "completed" %}selected{% endif %}>Completed</option>
+                        <option value="canceled" {% if request.GET.status == "canceled" %}selected{% endif %}>Canceled</option>
+                    </select>
+                    <i class="fas fa-chevron-down"></i>
+                </div>
+            </div>
+        </form>
+    </div>
+
+    <div class="bookings-table-container">
+        <table class="bookings-table">
+            <thead>
+                <tr>
+                    <th>ID</th>
+                    <th>Client</th>
+                    <th>Status</th>
+                    <th>Actions</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for booking in bookings %}
+                <tr>
+                    <td class="booking-id">#{{ booking.id }}</td>
+                    <td class="client-info">
+                        <div class="client-avatar">
+                            <i class="fas fa-user"></i>
+                        </div>
+                        <div class="client-details">
+                            <span class="client-name">{{ booking.user.username }}</span>
+                            <span class="client-email">{{ booking.user.email }}</span>
+                        </div>
+                    </td>
+                    <td class="booking-time">
+                        <div class="booking-date">{{ booking.booking_date|date:"M d, Y" }}</div>
+                        <div class="booking-hour">{{ booking.booking_time|time:"H:i" }}</div>
+                    </td>
+                    <td>
+                        <span class="status-badge {{ booking.status }}">
+                            <i class="status-icon
+                                {% if booking.status == 'pending' %}fas fa-clock
+                                {% elif booking.status == 'confirmed' %}fas fa-check-circle
+                                {% elif booking.status == 'completed' %}fas fa-calendar-check
+                                {% else %}fas fa-times-circle{% endif %}"></i>
+                            {{ booking.get_status_display }}
+                        </span>
+                    </td>
+                    <td class="actions">
+                        {% if booking.status != "completed" and booking.status != "canceled" %}
+                            <div class="action-buttons">
+                                <button type="button" class="btn-action btn-confirm" data-status="confirmed">
+                                    <i class="fas fa-check"></i> Confirm
+                                </button>
+                                <button type="button" class="btn-action btn-complete" data-status="completed">
+                                    <i class="fas fa-calendar-check"></i> Complete
+                                </button>
+                                <button type="button" class="btn-action btn-cancel" data-status="canceled">
+                                    <i class="fas fa-times"></i> Cancel
+                                </button>
+                                <form method="post" action="{% url 'update_booking_status' booking.id %}" class="status-form">
+                                    {% csrf_token %}
+                                    <input type="hidden" name="status">
+                                </form>
+                            </div>
+                        {% elif booking.status == "canceled" %}
+                            <span class="status-text canceled">
+                                <i class="fas fa-times-circle"></i> Canceled
+                            </span>
+                        {% else %}
+                            <span class="status-text completed">
+                                <i class="fas fa-check-circle"></i> Completed
+                            </span>
+                        {% endif %}
+                    </td>
+                </tr>
+                {% empty %}
+                <tr>
+                    <td colspan="5" class="no-bookings">
+                        <i class="fas fa-calendar-times"></i>
+                        <span>No bookings found</span>
+                    </td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+</div>
+
+
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    // Handle status update buttons
+    document.querySelectorAll('.btn-action').forEach(button => {
+        button.addEventListener('click', function() {
+            const status = this.getAttribute('data-status');
+            const form = this.closest('.action-buttons').querySelector('.status-form');
+            form.querySelector('input[name="status"]').value = status;
+            form.submit();
+        });
+    });
+});
+</script>
+{% endblock %}
